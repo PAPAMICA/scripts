@@ -21,6 +21,7 @@ deb-src http://debian.mirrors.ovh.net/debian/ stretch-updates main contrib non-f
 apt update && apt upgrade -y
 apt install -y sudo
 apt install -y chpasswd
+apt install -y openssh-server
 clear
 tput setaf 7; echo "-------------------------------------------------"
 tput bold; tput setaf 7; echo "    => Mise à jours des paquets effectué."
