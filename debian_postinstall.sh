@@ -15,6 +15,8 @@ deb-src http://security.debian.org/ stretch/updates main contrib non-free
 # stretch-updates, previously known as 'volatile'
 deb http://debian.mirrors.ovh.net/debian/ stretch-updates main contrib non-free
 deb-src http://debian.mirrors.ovh.net/debian/ stretch-updates main contrib non-free" > /etc/apt/sources.list
+echo 'deb http://deb.debian.org/debian stretch-backports main' > \
+ /etc/apt/sources.list.d/backports.list
 
 
 # Mise à jours des paquets
@@ -22,6 +24,7 @@ apt update && apt upgrade -y
 apt install -y sudo
 apt install -y chpasswd
 apt install -y openssh-server
+apt install -y cockpit
 clear
 tput setaf 7; echo "-------------------------------------------------"
 tput bold; tput setaf 7; echo "    => Mise à jours des paquets effectué."
