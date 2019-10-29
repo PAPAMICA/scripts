@@ -17,6 +17,7 @@ service zabbix-agent start
 systemctl enable zabbix-agent
 systemctl start zabbix-agent
 
-tput setaf 7; echo "-------------------------------------------------"
+echo "-------------------------------------------------"
 tput bold; tput setaf 7; echo "         => AGENT ZABBIX OK <="
-tput setaf 7; echo "-------------------------------------------------"
+echo "-------------------------------------------------"
+systemctl restart zabbix-agent
