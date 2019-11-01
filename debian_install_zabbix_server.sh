@@ -3,7 +3,8 @@
 # Change these settings
 read -p "Entrez le mot de passe pour Root pour MySQL : " MYSQL_ROOT_PASSWORD
 read -p "Entrez le mot de passe pour la base de données Zabbix : " ZABBIX_DB_USER_PASSWORD
-read -p "Entrez l'adresse ip du serveur : " SERVER_IP
+#read -p "Entrez l'adresse ip du serveur : " SERVER_IP
+SERVER_IP=$(hostname -i)
 
 apt-get install apt-transport-https ca-certificates curl gnupg2 software-properties-common
 curl -fsSL https://download.docker.com/linux/$(. /etc/os-release; echo "$ID")/gpg | apt-key add -
