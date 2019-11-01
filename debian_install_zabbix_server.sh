@@ -1,11 +1,12 @@
 #!/bin/bash
 clear
-# Change these settings
+# Principaux paramètres
 read -p "Entrez le mot de passe pour Root pour MySQL : " MYSQL_ROOT_PASSWORD
 read -p "Entrez le mot de passe pour la base de données Zabbix : " ZABBIX_DB_USER_PASSWORD
 #read -p "Entrez l'adresse ip du serveur : " SERVER_IP
 SERVER_IP=$(hostname -i)
 
+# Installation des dépendances et de docker
 apt-get install -y apt-transport-https ca-certificates curl gnupg2 software-properties-common
 curl -fsSL https://download.docker.com/linux/$(. /etc/os-release; echo "$ID")/gpg | apt-key add -
 add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/$(. /etc/os-release; echo "$ID") $(lsb_release -cs) stable"
@@ -14,9 +15,12 @@ apt-get -y install docker-ce
 systemctl enable docker
 systemctl start docker
 
+# Récupération des images de Zabbix et de Grafana
 docker pull zabbix/zabbix-web-nginx-mysql
 docker pull grafana/grafana
-# Deploy a mysql container for zabbix to use.
+docker pull mysql
+
+# Déploiement de la base de donnée pour Zabbix
 docker run -d \
   --name="zabbix-mysql-database" \
   --restart=always \
@@ -28,11 +32,11 @@ docker run -d \
   -v $HOME/volumes/mysql:/var/lib/mysql \
   mysql:5.7
 
-# Deploy the zabbix-server application container
+# Déploiement du serveur Zabbix
 docker run -d \
   --name zabbix-server \
   --restart=always \
-  -e DB_SERVER_HOST=localhost \
+  -e DB_SERVER_HOST=$SERVER_IP \
   -e MYSQL_USER="zabbix" \
   -e MYSQL_PASSWORD=$ZABBIX_DB_USER_PASSWORD \
   -v $HOME/volumes/zabbix/alertscripts:/usr/lib/zabbix/alertscripts \
@@ -47,22 +51,22 @@ docker run -d \
   -v $HOME/volumes/zabbix/mibs:/var/lib/zabbix/mibs \
   -p 10050:10050 \
   -p 10051:10051 \
-  zabbix/zabbix-server-mysql:ubuntu-3.4-latest
+  zabbix/zabbix-server-mysql:ubuntu-4.4-latest
 
-# Deploy the webserver frontend.
+# Déploiement du serveur web pour Zabbix
 docker run -d \
   --name zabbix-web-nginx \
   --restart=always \
-  -e DB_SERVER_HOST="localhost" \
+  -e DB_SERVER_HOST="$SERVER_IP" \
   -e MYSQL_USER="zabbix" \
   -e MYSQL_PASSWORD=$ZABBIX_DB_USER_PASSWORD \
-  -e ZBX_SERVER_HOST=localhost \
+  -e ZBX_SERVER_HOST=$SERVER_IP \
   -e PHP_TZ="Europe/Paris" \
   -p 80:80 \
   -p443:443 \
-  zabbix/zabbix-web-nginx-mysql:ubuntu-3.4-latest
+  zabbix/zabbix-web-nginx-mysql:ubuntu-4.4-latest
 
-#Deploy grafana
+#Déploiement de Grafana
 docker run -d --name=grafana -p 3000:3000 grafana/grafana
 
 tput setaf 7; echo "-------------------------------------------------"
