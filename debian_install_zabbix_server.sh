@@ -1,7 +1,7 @@
 #!/bin/bash
 clear
 # Principaux paramètres
-tput setaf 2; read -p "Entrez le mot de passe pour la base de données Zabbix : " ZABBIX_DB_USER_PASSWORD
+tput setaf 7; read -p "Entrez le mot de passe pour la base de données Zabbix : " ZABBIX_DB_USER_PASSWORD
 #read -p "Entrez l'adresse ip du serveur : " SERVER_IP
 SERVER_IP=$(hostname -i)
 echo ""
@@ -27,15 +27,17 @@ docker-compose up -d
 
 clear
 tput bold; tput setaf 7; echo "LISTES DES CONTAINERS EN COURS : "
+tput setaf 3; echo ""
 docker container ls
+echo ""
 tput setaf 7; echo "-------------------------------------------------"
-tput bold; tput setaf 7; echo "        => INSTALLATION TERMINEE <="
+tput bold; tput setaf 7; echo "         => INSTALLATION TERMINEE <="
 tput setaf 7; echo ""
-tput setaf 7; echo "     IP du serveur Zabbix : $SERVER_IP:8090      "
-tput setaf 7; echo "           ID : Admin / MDP : zabbix             "
+tput setaf 7; echo "   IP du serveur Zabbix : $SERVER_IP:8090      "
+tput setaf 7; echo "         ID : Admin / MDP : zabbix             "
 tput setaf 7; echo ""
-tput setaf 7; echo "     IP du serveur Grafana : $SERVER_IP:3000     "
-tput setaf 7; echo "           ID : admin / MDP : admin              "
+tput setaf 7; echo "   IP du serveur Grafana : $SERVER_IP:3000     "
+tput setaf 7; echo "         ID : admin / MDP : admin              "
 tput setaf 7; echo ""
 tput bold; tput setaf 6; echo "                By PAPAMICA"
 tput bold; tput setaf 6; echo "                Labo-Tech.fr"

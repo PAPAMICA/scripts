@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
-read -p "Entrez le nom du serveur : " server_name
-read -p "Entrez l'ip du serveur Zabbix : " server_ip
-dpkg -i zabbix-release_4.0-3+stretch_all.deb
+clear
+tput setaf 7; read -p "Entrez le nom du serveur : " server_name
+tput setaf 7; read -p "Entrez l'ip du serveur Zabbix : " server_ip
+tput setaf 2; dpkg -i zabbix-release_4.0-3+stretch_all.deb
 
 apt-get update
 apt-get install zabbix-agent -y
@@ -18,7 +19,16 @@ service zabbix-agent start
 systemctl enable zabbix-agent
 systemctl start zabbix-agent
 
-echo "-------------------------------------------------"
-tput bold; tput setaf 7; echo "         => AGENT ZABBIX OK <="
-echo "-------------------------------------------------"
-systemctl restart zabbix-agent
+clear
+tput bold; tput setaf 7; echo "STATUS DU SERVICE AGENT-ZABBIX : "
+tput setaf 3; echo ""
+systemctl status zabbix-agent
+tput setaf 3; echo ""
+tput bold; tput setaf 7; echo "-------------------------------------------------"
+tput bold; tput setaf 7; echo "             => AGENT ZABBIX OK <="
+tput setaf 7; echo ""
+tput bold; tput setaf 6; echo "                By PAPAMICA"
+tput bold; tput setaf 6; echo "                Labo-Tech.fr"
+tput bold; tput setaf 7; echo "-------------------------------------------------"
+tput setaf 2; echo ""
+
