@@ -21,6 +21,8 @@ services:
       ZBX_MAXHOUSEKEEPERDELETE: 5000
     depends_on:
       - postgres-server
+    ports:
+      - 10051:10051
     volumes:  # Volumes for scripts and related files you can add
       - /usr/lib/zabbix/alertscripts:/usr/lib/zabbix/alertscripts
   
