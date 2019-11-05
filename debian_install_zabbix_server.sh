@@ -4,7 +4,7 @@ clear
 tput setaf 7; read -p "Entrez le mot de passe pour la base de données Zabbix : " ZABBIX_DB_USER_PASSWORD
 #read -p "Entrez l'adresse ip du serveur : " SERVER_IP
 SERVER_IP=$(hostname -i)
-echo ""
+tput setaf 2; echo ""
 
 # Installation des dépendances et de docker
 apt-get install -y apt-transport-https ca-certificates curl gnupg2 software-properties-common

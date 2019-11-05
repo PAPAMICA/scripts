@@ -3,7 +3,7 @@
 clear
 tput setaf 7; read -p "Entrez le nom du serveur : " server_name
 tput setaf 7; read -p "Entrez l'ip du serveur Zabbix : " server_ip
-tput setaf 2; dpkg -i zabbix-release_4.0-3+stretch_all.deb
+#tput setaf 2; dpkg -i zabbix-release_4.0-3+stretch_all.deb
 
 apt-get update
 apt-get install zabbix-agent -y
