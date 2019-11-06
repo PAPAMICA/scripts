@@ -10,6 +10,7 @@ services:
       PG_DATA: /var/lib/postgresql/data/pgdata #data storage
     volumes:
       - db:/var/lib/postgresql/data
+      
   zabbix-server:     # The main Zabbix Server Software Service
     image: zabbix/zabbix-server-pgsql:ubuntu-latest
     restart: always
@@ -49,6 +50,7 @@ services:
       - zabbix-server
     ports:    # Port where Zabbix UI is available
       - 8090:80
+      
   zabbix-agent:   # Zabbix agent service that tracks usage and send to zabbix server
     image: zabbix/zabbix-agent:latest
     privileged: true   #access mode for allowing resource access
@@ -56,11 +58,13 @@ services:
     restart: unless-stopped
     environment:
       - ZBX_SERVER_HOST=ip-adress-zabbix #the IP/Dns of Zabbix server
+      
   adminer:  #Optional for accessing databases
     image: adminer
     restart: always
     ports:
       - 8080:8080
+      
   grafana-xxl:  #optional more functional and creative UI 
     image: monitoringartist/grafana-xxl:latest
     restart: always
