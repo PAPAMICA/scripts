@@ -9,7 +9,7 @@ services:
       POSTGRES_DB: zabbix
       PG_DATA: /var/lib/postgresql/data/pgdata #data storage
     volumes:
-      - db:/var/lib/postgresql/data
+      - /var/lib/postgresql/data
       
   zabbix-server:     # The main Zabbix Server Software Service
     image: zabbix/zabbix-server-pgsql:ubuntu-latest
