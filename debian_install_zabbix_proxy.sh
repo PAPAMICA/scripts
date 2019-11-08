@@ -1,9 +1,9 @@
 #!/bin/bash
 clear
 # Principaux paramètres
-tput setaf 7; read -p "Entrez le mot de passe pour la base de données Zabbix : " ZABBIX_DB_USER_PASSWORD
-#read -p "Entrez l'adresse ip du serveur : " SERVER_IP
-SERVER_IP=$(hostname -i)
+tput setaf 7; read -p "Entrez l'ip du serveur Zabbix principal': " ZABBIX_HOST_IP
+tput setaf 7; read -p "Entrez le nom de ce proxy': " ZABBIX_PROXY_HOSTNAME
+
 tput setaf 2; echo ""
 
 # Installation des dépendances et de docker
@@ -16,13 +16,13 @@ systemctl enable docker
 systemctl start docker
 
 # Modification et lancement du docker-compose.yml
-for file in ~/scripts/zabbix-server/docker-compose.yml
+for file in ~/scripts/zabbix-proxy/docker-compose.yml
 do
   echo "Traitement de $file ..."
-  sed -i -e "s/zabbix-bdd-password/$ZABBIX_DB_USER_PASSWORD/g" "$file"
-  sed -i -e "s/ip-adress-zabbix/$SERVER_IP/g" "$file"
+  sed -i -e "s/ZABBIX_HOST_IP/$ZABBIX_HOST_IP/g" "$file"
+  sed -i -e "s/ZABBIX_PROXY_HOSTNAME/$ZABBIX_PROXY_HOSTNAME/g" "$file"
 done
-cd ~/scripts/zabbix-server/
+cd ~/scripts/zabbix-proxy/
 docker-compose up -d
 
 clear
@@ -33,11 +33,7 @@ echo ""
 tput setaf 7; echo "-------------------------------------------------"
 tput bold; tput setaf 7; echo "         => INSTALLATION TERMINEE <="
 tput setaf 7; echo ""
-tput setaf 7; echo "   IP du serveur Zabbix : $SERVER_IP:8090      "
-tput setaf 7; echo "         ID : Admin / MDP : zabbix             "
-tput setaf 7; echo ""
-tput setaf 7; echo "   IP du serveur Grafana : $SERVER_IP:3000     "
-tput setaf 7; echo "         ID : admin / MDP : admin              "
+tput setaf 7; echo "    Nom du proxy : $ZABBIX_PROXY_HOSTNAME      "
 tput setaf 7; echo ""
 tput bold; tput setaf 6; echo "                By PAPAMICA"
 tput bold; tput setaf 6; echo "                Labo-Tech.fr"
