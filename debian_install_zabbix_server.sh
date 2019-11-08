@@ -16,7 +16,7 @@ systemctl enable docker
 systemctl start docker
 
 # Modification et lancement du docker-compose.yml
-for file in ~/scripts/zabbix/docker-compose.yml
+for file in ~/scripts/zabbix-server/docker-compose.yml
 do
   echo "Traitement de $file ..."
   sed -i -e "s/zabbix-bdd-password/$ZABBIX_DB_USER_PASSWORD/g" "$file"
