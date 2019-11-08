@@ -25,6 +25,7 @@ apt install -y sudo
 apt install -y chpasswd
 apt install -y openssh-server
 apt install -y cockpit
+apt install -y locate
 clear
 tput setaf 7; echo "-------------------------------------------------"
 tput bold; tput setaf 7; echo "    => Mise à jours des paquets effectué."
@@ -109,6 +110,7 @@ echo "include .bashrc if it exists if [ -f ~/.bashrc ]; then . ~/.bashrc fi" >> 
 tput setaf 7; echo "-------------------------------------------------"
 tput bold; tput setaf 7; echo " => Le changement des couleurs est opérationnel."
 tput setaf 7; echo "-------------------------------------------------"
+updatedb
 
 echo ""
 echo ""
