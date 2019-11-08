@@ -1,8 +1,8 @@
 #!/bin/bash
 clear
 # Principaux paramètres
-tput setaf 7; read -p "Entrez l'ip du serveur Zabbix principal': " ZABBIX_HOST_IP
-tput setaf 7; read -p "Entrez le nom de ce proxy': " ZABBIX_PROXY_HOSTNAME
+tput setaf 7; read -p "Entrez l'ip du serveur Zabbix principal: " ZABBIX_HOST_IP
+tput setaf 7; read -p "Entrez le nom de ce proxy: " ZABBIX_PROXY_HOSTNAME
 
 tput setaf 2; echo ""
 
