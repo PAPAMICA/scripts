@@ -4,7 +4,7 @@ services:
     image: zabbix/zabbix-proxy-sqlite3:ubuntu-4.4-latest
     restart: always
     environment:   # Username, password and database name variables
-      ZBX_PROXYMODE: 1
+      ZBX_PROXYMODE: 0
       ZBX_HOSTNAME: ZABBIX_PROXY_HOSTNAME
       ZBX_SERVER_HOST: ZABBIX_HOST_IP
       ZBX_ENABLEREMOTECOMMANDS: 1
