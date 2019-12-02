@@ -1,0 +1,10 @@
+version: '2'
+services:
+  guacamole:
+    image: oznu/guacamole
+    container_name: guacamole
+    volumes:
+      - postgres:/config
+    ports:
+      - 8080:8080
+    extensions: auth-totp
