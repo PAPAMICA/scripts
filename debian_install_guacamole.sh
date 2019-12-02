@@ -10,7 +10,7 @@ apt-get -y install docker-ce docker-compose
 systemctl enable docker
 systemctl start docker
 
-Lancement du docker-compose.yml
+#Lancement du docker-compose.yml
 cd ~/scripts/guacamole/
 docker-compose up -d
 
