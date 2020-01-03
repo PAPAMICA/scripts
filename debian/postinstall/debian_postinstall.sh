@@ -21,7 +21,14 @@ echo 'deb http://deb.debian.org/debian stretch-backports main' > \
 
 # Mise à jours des paquets
 apt update && apt upgrade -y
-apt install -y sudo chpasswd openssh-server cockpit locate zsh curl fonts-powerline
+apt install -y sudo 
+apt install -y chpasswd
+apt install -y openssh-server
+apt install -y cockpit
+apt install -y locate
+apt install -y zsh
+apt install -y curl
+apt install -y fonts-powerline
 
 chsh -s $(which zsh)
 
