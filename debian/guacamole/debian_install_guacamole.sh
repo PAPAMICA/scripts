@@ -11,7 +11,6 @@ systemctl enable docker
 systemctl start docker
 
 #Lancement du docker-compose.yml
-cd ~/scripts/guacamole/
 docker-compose up -d
 
 clear

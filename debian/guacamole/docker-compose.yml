@@ -5,3 +5,4 @@ services:
     container_name: guacamole
     ports:
       - 8080:8080
+    restart: always
