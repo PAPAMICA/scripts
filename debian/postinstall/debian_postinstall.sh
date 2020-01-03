@@ -26,6 +26,10 @@ apt install -y chpasswd
 apt install -y openssh-server
 apt install -y cockpit
 apt install -y locate
+apt install -y zsh
+apt install -y curl
+apt install -y fonts-powerline
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 clear
 tput setaf 7; echo "-------------------------------------------------"
 tput bold; tput setaf 7; echo "    => Mise à jours des paquets effectué."
@@ -75,41 +79,15 @@ tput setaf 7; echo "-------------------------------------------------"
 tput setaf 7; echo "          => Le MOTD a été changé."
 tput setaf 7; echo "-------------------------------------------------"
 
-# Changement des couleurs
-echo "export PS1=\"\[\e[32m\][\[\e[m\]\[\e[31m\]\u\[\e[m\]\[\e[33m\]@\[\e[m\]\[\e[32m\]\h\[\e[m\]:\[\e[36m\]\w\[\e[m\]\[\e[32m\]]\[\e[m\]\[\e[32;47m\]\\$\[\e[m\]\"" >> /root/.bashrc
-echo "if [ \"$PS1\" ]; then
+# Modification de zsh
+for file in ~/.zshrc
+do
+  echo "Traitement de $file ..."
+  sed -i -e "s/ZSH_THEME="robbyrussell"/ZSH_THEME=agnoster/g" "$file"
+done
 
-    normal=\"\[\e[0m\]\"
-    Vert=\"\[\e[0;32m\]\"
-    Rose=\"\[\e[0;35m\]\"
-    Rouge=\"\[\e[0;31m\]\"
-    #PS1='\u@\h:\w\$ '
-    export PS1=\"$Vert\u$Rose@\h:\w$normal \"
+chsh -s $(which zsh)
 
-    eval `dircolors -b`
-    alias ls='ls --color=auto'
-    alias ll='ls --color=auto -lh'
-    alias dir='ls --color=auto --format=vertical'" >> /root/.bashrc
-echo "include .bashrc if it exists if [ -f ~/.bashrc ]; then . ~/.bashrc fi" >> /root/.bash_profile
-
-echo " export PS1=\"\[\e[32m\][\[\e[m\]\[\e[33m\]\u\[\e[m\]\[\e[33m\]@\[\e[m\]\[\e[32m\]\h\[\e[m\]:\[\e[36m\]\w\[\e[m\]\[\e[32m\]]\[\e[m\]\[\e[32;47m\]\\$\[\e[m\] \"" >> /home/$name_user/.bashrc
-echo "if [ \"$PS1\" ]; then
-
-    normal=\"\[\e[0m\]\"
-    Vert=\"\[\e[0;32m\]\"
-    Rose=\"\[\e[0;35m\]\"
-    Rouge=\"\[\e[0;31m\]\"
-    #PS1='\u@\h:\w\$ '
-    export PS1=\"$Vert\u$Rose@\h:\w$normal \"
-
-    eval `dircolors -b`
-    alias ls='ls --color=auto'
-    alias ll='ls --color=auto -lh'
-    alias dir='ls --color=auto --format=vertical'" >> /home/$name_user/.bashrc
-echo "include .bashrc if it exists if [ -f ~/.bashrc ]; then . ~/.bashrc fi" >> /home/$name_user/.bash_profile
-tput setaf 7; echo "-------------------------------------------------"
-tput bold; tput setaf 7; echo " => Le changement des couleurs est opérationnel."
-tput setaf 7; echo "-------------------------------------------------"
 updatedb
 
 echo ""
@@ -122,3 +100,5 @@ tput bold; tput setaf 6; echo "                By PAPAMICA"
 tput bold; tput setaf 6; echo "                Labo-Tech.fr"
 tput setaf 7; echo "-------------------------------------------------"
 tput setaf 2; echo ""
+read -p "Appuyez sur Entrer pour redémarrer."
+reboot
