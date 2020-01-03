@@ -21,20 +21,23 @@ echo 'deb http://deb.debian.org/debian stretch-backports main' > \
 
 # Mise à jours des paquets
 apt update && apt upgrade -y
-apt install -y sudo
-apt install -y chpasswd
-apt install -y openssh-server
-apt install -y cockpit
-apt install -y locate
-apt install -y zsh
-apt install -y curl
-apt install -y fonts-powerline
+apt install -y sudo chpasswd openssh-server cockpit locate zsh curl fonts-powerline
 
 chsh -s $(which zsh)
 
-locale-gen fr_FR.UTF-8
-
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+
+locale-gen --purge fr_FR.UTF-8
+echo -e 'LANG="fr_FR.UTF-8"\nLANGUAGE="fr_FR:fr"\n' > /etc/default/locale
+
+
+# Modification de zsh
+for file in ~/.zshrc
+do
+  echo "Traitement de $file ..."
+  sed -i -e "s/ZSH_THEME=\"robbyrussell\"/ZSH_THEME=agnoster/g" "$file"
+done
+
 clear
 tput setaf 7; echo "-------------------------------------------------"
 tput bold; tput setaf 7; echo "    => Mise à jours des paquets effectué."
@@ -84,17 +87,6 @@ tput setaf 7; echo "-------------------------------------------------"
 tput setaf 7; echo "          => Le MOTD a été changé."
 tput setaf 7; echo "-------------------------------------------------"
 
-# Modification de zsh
-for file in ~/.zshrc
-do
-  echo "Traitement de $file ..."
-  sed -i -e "s/ZSH_THEME="robbyrussell"/ZSH_THEME=agnoster/g" "$file"
-done
-
-chsh -s $(which zsh)
-
-locale-gen fr_FR.UTF-8
-
 updatedb
 
 echo ""
@@ -107,5 +99,7 @@ tput bold; tput setaf 6; echo "                By PAPAMICA"
 tput bold; tput setaf 6; echo "                Labo-Tech.fr"
 tput setaf 7; echo "-------------------------------------------------"
 tput setaf 2; echo ""
-read -p "Appuyez sur Entrer pour redémarrer."
-reboot
+
+
+read -p "Appuyez sur Entrer pour se deconnecter." enter
+exit
