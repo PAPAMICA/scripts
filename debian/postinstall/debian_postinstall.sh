@@ -88,6 +88,8 @@ done
 
 chsh -s $(which zsh)
 
+locale-gen fr_FR.UTF-8
+
 updatedb
 
 echo ""
