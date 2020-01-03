@@ -29,6 +29,11 @@ apt install -y locate
 apt install -y zsh
 apt install -y curl
 apt install -y fonts-powerline
+
+chsh -s $(which zsh)
+
+locale-gen fr_FR.UTF-8
+
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 clear
 tput setaf 7; echo "-------------------------------------------------"
