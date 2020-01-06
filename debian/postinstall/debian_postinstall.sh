@@ -109,7 +109,3 @@ tput bold; tput setaf 6; echo "                By PAPAMICA"
 tput bold; tput setaf 6; echo "                Labo-Tech.fr"
 tput setaf 7; echo "-------------------------------------------------"
 tput setaf 2; echo ""
-
-
-read -p "Appuyez sur Entrer pour se deconnecter." enter
-exit
