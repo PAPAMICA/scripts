@@ -1,0 +1,10 @@
+version: '2'
+services:
+  itop:
+    image: vbkunin/itop
+    container_name: itop
+    ports:
+      - 8000:80
+    volumes:
+      - /home/user/itop-extensions:/var/www/html/extensions
+    restart: always
