@@ -37,5 +37,6 @@ chmod +x name_of_script.sh
     + **Zabbix-Server (Docker)** : debian_install_zabbix_server.sh
     + **Zabbix-Proxy (Docker)** : debian_install_zabbix_proxy.sh
     + **Zabbix-Agent** : debian_install_zabbix_agent.sh
++ **WordPress (Docker test)** : debian_install_wordpress.sh
      
 Et bien plus sont à venir !
