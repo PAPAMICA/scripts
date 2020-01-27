@@ -12,7 +12,7 @@ curl -fsSL https://download.docker.com/linux/$(. /etc/os-release; echo "$ID")/gp
 add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/$(. /etc/os-release; echo "$ID") $(lsb_release -cs) stable"
 apt-get update
 apt-get -y install docker-ce docker-compose
-apt-get install snmpd snmp
+apt-get -y install snmpd snmp
 systemctl enable docker
 systemctl enable snmpd
 systemctl start docker
