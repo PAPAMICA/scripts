@@ -1,0 +1,38 @@
+# Docker-compose pour Organizr avec le support de Traefik
+# Pour Traefik, pensez a décommenter les lignes networks et labels.
+
+#By PAPAMICA
+
+version: "2"
+services:
+  organizr:
+    image: organizrtools/organizr-v2
+    container_name: organizr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Paris
+    volumes:
+      - /apps/organizr/config:/config
+    ports:
+      - 9983:80
+    restart: unless-stopped
+#    networks:
+#      - proxy
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.organizr.entrypoints=http"
+#      - "traefik.http.routers.organizr.rule=Host(`app.ndd.fr`)"
+#      - "traefik.http.middlewares.organizr-https-redirect.redirectscheme.scheme=https"
+#      - "traefik.http.routers.organizr.middlewares=organizr-https-redirect"
+#      - "traefik.http.routers.organizr-secure.entrypoints=https"
+#      - "traefik.http.routers.organizr-secure.rule=Host(`app.ndd.fr`)"
+#      - "traefik.http.routers.organizr-secure.tls=true"
+#      - "traefik.http.routers.organizr-secure.tls.certresolver=http"
+#      - "traefik.docker.network=proxy"
+#
+#networks:
+#  proxy:
+#    external:
+#      name: proxy
+

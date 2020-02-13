@@ -1,0 +1,58 @@
+# Docker-compose pour Odoo avec le support de Traefik
+# Pour Traefik, pensez a décommenter les lignes networks et labels.
+
+#By PAPAMICA
+
+version: '2'
+services:
+  postgresql:
+    container_name: odoo-db
+    image: 'bitnami/postgresql:11'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      - TZ=Europe/Paris
+      - PUID=1000
+      - PGID=1000
+#    volumes:
+#      - /apps/odoo/db:/bitnami/postgresql
+    restart: always
+    networks:
+      - proxy
+      
+  odoo:
+    image: 'bitnami/odoo:13'
+    container_name: odoo
+    ports:
+      - '8987:8069'
+      - '3443:8071'
+    environment:
+      - ODOO_EMAIL=mail@ndd.fr
+      - ODOO_PASSWORD=PASSWORD
+      - SMTP_HOST=smtp.gmail.com
+      - SMTP_PORT=587
+      - SMTP_USER=your_email@gmail.com
+      - SMTP_PASSWORD=your_password
+      - SMTP_PROTOCOL=tls
+    volumes:
+      - /apps/odoo/data:/bitnami
+    depends_on:
+      - postgresql
+    restart: always
+#    networks:
+#      - proxy
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.odoo.entrypoints=http"
+#      - "traefik.http.routers.odoo.rule=Host(`odoo.ndd.fr`)"
+#      - "traefik.http.middlewares.odoo-https-redirect.redirectscheme.scheme=https"
+#      - "traefik.http.routers.odoo.middlewares=odoo-https-redirect"
+#      - "traefik.http.routers.odoo-secure.entrypoints=https"
+#      - "traefik.http.routers.odoo-secure.rule=Host(`odoo.ndd.fr`)"
+#      - "traefik.http.routers.odoo-secure.tls=true"
+#      - "traefik.http.routers.odoo-secure.tls.certresolver=http"
+#      - "traefik.docker.network=proxy"
+      
+#networks:
+#  proxy:
+#    external:
+#      name: proxy
