@@ -43,6 +43,52 @@ chmod +x name_of_script.sh
 + **GLPI (Docker)** : debian_install_glpi.sh
      
 Et bien plus sont à venir !
+
+# Docker-compose
+Les dockers-compose sont tous en version 2 et fonctionnent avec Portainer.
+Dans chaque docker-compose, les labels et le network (proxy) sont préconfigurer pour fonctionner avec Traefik.
+
+Ces docker-compose sont adapté à mes besoins, n'hésitez pas à les modifiers pour votre utilisation.
+Un bon moyen de vérifier les paramètres disponibles chaque image reste la petite recherche Google avec le nom de l'image ;)
+
+### Utilisation
+Installer Docker et Docker-compose.
+
+Récupération des scripts :
+```bash
+git clone https://github.com/PAPAMICA/scripts
+```
+
+
+Lancer un docker-compose :
+```bash
+cd scripts/docker-compose/service_folder
+docker-compose up -d
+```
+
+### Liste des docker-compose :
+
++ **Traefik**
++ **Portainer**
++ **Bookstack**
++ **CachetHQ** (avec Cachet-Zabbix)
++ **FileBrowser**
++ **FloodTorrent**
++ **Jellyfin**
++ **NextCloud** (avec redis)
++ **Odoo**
++ **Organizr**
++ **OwnCloud** (avec redis)
++ **Plex-Tools** (Varken, Radarr, Sonarr, Grafana, etc...)
++ **Plex**
++ **RuTorrent**
++ **Seafile**
++ **TeamSpeak** (avec SinusBot et TS3Viewer)
++ **VSCode**
++ **Website-HTML**
++ **Website-Wordpress**
+     
+Et bien plus sont à venir !
     
 ## Quelques commandes utiles :
 
