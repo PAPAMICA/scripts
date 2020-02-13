@@ -1,0 +1,45 @@
+# Docker-compose pour RuTorrent avec le support de Traefik
+# Pour Traefik, pensez a décommenter les lignes networks et labels.
+
+#By PAPAMICA
+version: '2'
+services:
+    rutorrent-autodl:
+        container_name: rutorrent
+        volumes:
+            - /apps/rutorrent/config:/config
+            - /DATA:/downloads
+        environment:
+            - PGID=1000
+            - PUID=1000
+            - TZ=Europe/Paris
+        ports:
+            - 8780:80        
+            - 5000:5000
+            - 51413:51413
+            - 6881:6881/udp
+        image: horjulf/rutorrent-autodl
+        restart: unless-stopped
+#        networks:
+#            - proxy
+#        labels:
+#            - "traefik.enable=true"
+#            - "traefik.http.routers.rutorrent.entrypoints=http"
+#            - "traefik.http.routers.rutorrent.rule=Host(`rutorrent.ndd.fr`)"
+#            - "traefik.http.middlewares.rutorrent-https-redirect.redirectscheme.scheme=https"
+#            - "traefik.http.routers.rutorrent.middlewares=rutorrent-https-redirect"
+#            - "traefik.http.routers.rutorrent-secure.entrypoints=https"
+#            - "traefik.http.routers.rutorrent-secure.rule=Host(`rutorrent.ndd.fr`)"
+#            - "traefik.http.routers.rutorrent-secure.tls=true"
+#            - "traefik.http.routers.rutorrent-secure.tls.certresolver=http"
+#            - "traefik.docker.network=proxy"
+#            - "traefik.http.middlewares.rutorrent-auth.basicauth.users= #IDENTIFIANT:MDP (SHA)
+##            - "traefik.http.middlewares.rutorrent-secure.basicauth.removeheader=true"
+#            - "traefik.http.routers.rutorrent-secure.middlewares=rutorrent-auth"
+#
+#        
+#
+#networks:
+#    proxy:
+#        external:
+#            name: proxy

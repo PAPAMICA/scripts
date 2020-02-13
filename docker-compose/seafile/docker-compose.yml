@@ -1,0 +1,38 @@
+# Docker-compose pour Seafile avec le support de Traefik
+# Pour Traefik, pensez a décommenter les lignes networks et labels.
+
+#By PAPAMICA
+version: '2'
+
+services:
+    seafile:
+        environment:
+            - SEAFILE_NAME='Seafile'
+            - SEAFILE_ADDRESS=seafile.ndd.fr
+            - SEAFILE_ADMIN=admin@ndd.fr
+            - SEAFILE_ADMIN_PW=PAPAMICA
+        volumes:
+            - '/DATA:/seafile'
+        image: m3adow/seafile
+        restart: always
+        ports:
+            - 8000:8000
+#        labels:
+#          - "traefik.enable=true"
+#          - "traefik.http.routers.seafile.entrypoints=http"
+#          - "traefik.http.routers.seafile.rule=Host(`seafile.ndd.fr`)"
+#          - "traefik.http.middlewares.seafile-https-redirect.redirectscheme.scheme=https"
+#          - "traefik.http.routers.seafile.middlewares=seafile-https-redirect"
+#          - "traefik.http.routers.seafile-secure.entrypoints=https"
+#          - "traefik.http.routers.seafile-secure.rule=Host(`seafile.ndd.fr`)"
+#          - "traefik.http.routers.seafile-secure.tls=true"
+#          - "traefik.http.routers.seafile-secure.tls.certresolver=http"
+#          - "traefik.http.services.seafile-secure.loadbalancer.server.port=8000"
+#          - "traefik.docker.network=proxy"
+#        networks:
+#          - proxy
+#      
+#networks:
+#  proxy:
+#    external:
+#      name: proxy

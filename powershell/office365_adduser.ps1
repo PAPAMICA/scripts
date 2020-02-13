@@ -35,10 +35,9 @@ $FolderPath = "C:/Office365"
 Convert-CsvInBatch -Folder $FolderPath
 
 
-## Authentification Office 365 par PAPAMICA
-$UserAdmin = "admin@e2c95.fr"         ## Adresse email de connexion
-$Credentials = "vffysbdynxxzbbtn"     ## Mot de passe application du compte
-Connect-MsolService -Credential $Credentials
+## Authentification Office 365
+
+Connect-MsolService 
 $MsoExchangeURL = "https://ps.outlook.com/PowerShell-LiveID?PSVersion=5.0.10586.122"
 $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri $MsoExchangeURL -Credential $Credentials -Authentication Basic -AllowRedirection
 
@@ -55,10 +54,10 @@ foreach($User in $CSV){
     $UserPassword = $User.PASSWORD
 
     # Licence à attribuer à l'utilisateur
-    $UserLicense = "e2c95:STANDARDWOFFPACK_STUDENT"
+    $UserLicense = "entreprise:STANDARDWOFFPACK_STUDENT"
 
     # UPN sous la forme prenom.nom@ndd
-    $UserPrincipalName = ($UserName).ToLower() + "." + ($UserSurname).ToLower() + "@e2c77.org"  ## Nom de domaine de la société
+    $UserPrincipalName = ($UserName).ToLower() + "." + ($UserSurname).ToLower() + "@ndd.fr"  ## Nom de domaine de la société
 
 try{
     # Créer l'utilisateur

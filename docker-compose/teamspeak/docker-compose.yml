@@ -1,0 +1,85 @@
+# Docker-compose pour TeamSpeak et Sinusbot avec le support de Traefik
+# Pour Traefik, pensez a décommenter les lignes networks et labels.
+
+#By PAPAMICA
+version: '2'
+services:
+  sinusbot:
+    image: galexrt/sinusbot:latest
+    restart: always
+    ports:
+      - 8087:8087
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.sinusbot.entrypoints=http"
+#      - "traefik.http.routers.sinusbot.rule=Host(`sinusbot.ndd.fr`)"
+#      - "traefik.http.middlewares.sinusbot-https-redirect.redirectscheme.scheme=https"
+#      - "traefik.http.routers.sinusbot.middlewares=sinusbot-https-redirect"
+#      - "traefik.http.routers.sinusbot-secure.entrypoints=https"
+#      - "traefik.http.routers.sinusbot-secure.rule=Host(`sinusbot.ndd.fr`)"
+#      - "traefik.http.routers.sinusbot-secure.tls=true"
+#      - "traefik.http.routers.sinusbot-secure.tls.certresolver=http"
+#      - "traefik.docker.network=proxy"
+#    networks:
+#      - proxy
+    volumes:
+      - /apps/sinusbot/scripts:/sinusbot/scripts
+      - /apps/sinusbot/data:/sinusbot/data
+  
+  teamspeak:
+    image: mbentley/teamspeak
+    restart: always
+    container_name: teamspeak
+    volumes:
+      - /apps/teamspeak/data:/data
+    ports:
+      - 9987:9987/udp
+      - 10011:10011
+      - 30033:30033
+    environment:
+      - UID=1000
+      - GID=1000
+      - TS3SERVER_LICENSE=accept
+#    labels:
+#      - traefik.enable=true
+#      - traefik.http.routers.ts.rule=Host(`ts.ndd.fr`)
+#      - traefik.http.routers.ts.entryPoints=http
+#      - traefik.ts.port=9987
+#      - traefik.ts2.port=30033
+#      - traefik.query.port=10011
+#    networks:
+#      - proxy
+  ts3viewer:
+    image: jotschi/ts3viewer
+    restart: always
+    volumes:
+      - /apps/teamspeak/viewer:/var/www/html/
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TS_PORT=10011
+      - TS_HOST=172.18.0.6
+      - TS_SERVER_PORT=9987
+      - TS_VIEWER_LIGHT_MODE="false"
+      - TS_VIEWER_CACHE_TIME="20"
+#      - TS_QUERY_LOGIN="LOGIN_NAME"
+#      - TS_QUERY_PASS="PASSWORD"
+#    networks:
+#      - proxy
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.ts3viewer.entrypoints=http"
+#      - "traefik.http.routers.ts3viewer.rule=Host(`ts3viewer.ndd.fr`)"
+#      - "traefik.http.middlewares.ts3viewer-https-redirect.redirectscheme.scheme=https"
+#      - "traefik.http.routers.ts3viewer.middlewares=ts3viewer-https-redirect"
+#      - "traefik.http.routers.ts3viewer-secure.entrypoints=https"
+#      - "traefik.http.routers.ts3viewer-secure.rule=Host(`ts3viewer.ndd.fr`)"
+#      - "traefik.http.routers.ts3viewer-secure.tls=true"
+#      - "traefik.http.routers.ts3viewer-secure.tls.certresolver=http"
+#      - "traefik.docker.network=proxy"
+
+    
+#networks:
+#  proxy:
+#    external:
+#      name: proxy

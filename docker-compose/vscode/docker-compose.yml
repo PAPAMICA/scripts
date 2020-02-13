@@ -1,0 +1,35 @@
+# Docker-compose pour VSCode avec le support de Traefik
+# Pour Traefik, pensez a décommenter les lignes networks et labels.
+
+#By PAPAMICA
+version: '2'
+
+services:
+  postgres:
+    container_name: vscode
+    image: codercom/code-server
+    volumes:
+      - /apps:/home/coder/project
+      - /DATA/PROJETS:/home/coder/PROJETS
+    restart: always
+    environment:
+      - PASSWORD=PAPAMICA
+#    networks:
+#      - proxy
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.vscode.entrypoints=http"
+#      - "traefik.http.routers.vscode.rule=Host(`vscode.ndd.fr`)"
+#      - "traefik.http.middlewares.vscode-https-redirect.redirectscheme.scheme=https"
+#      - "traefik.http.routers.vscode.middlewares=vscode-https-redirect"
+#      - "traefik.http.routers.vscode-secure.entrypoints=https"
+#      - "traefik.http.routers.vscode-secure.rule=Host(`vscode.ndd.fr`)"
+#      - "traefik.http.routers.vscode-secure.tls=true"
+#      - "traefik.http.routers.vscode-secure.tls.certresolver=http"
+#      - "traefik.http.services.vscode-secure.loadbalancer.server.port=8080"
+#      - "traefik.docker.network=proxy"
+#      
+#networks:
+#  proxy:
+#    external:
+#      name: proxy
