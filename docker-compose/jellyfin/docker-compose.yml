@@ -1,0 +1,42 @@
+# Docker-compose pour Jellyfin avec le support de Traefik
+# Pour Traefik, pensez a décommenter les lignes networks et labels.
+
+#By PAPAMICA
+version: "2"
+
+services:
+  jellyfin:
+    image: linuxserver/jellyfin
+    container_name: streamplayer
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Paris
+#      - UMASK_SET=022 #optional
+    ports:
+      - 8096:8096
+    volumes:
+      - /apps/streamplayer/config:/config
+      - /DATA/SERIES:/data/tvshows
+      - /DATA/FILMS:/data/movies
+#      - /tmp:/transcode #optional
+#      - /opt/vc/lib:/opt/vc/lib #optional
+#    networks:
+#      - proxy
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.stream.entrypoints=http"
+#      - "traefik.http.routers.stream.rule=Host(`stream.ndd.fr`)"
+#      - "traefik.http.middlewares.stream-https-redirect.redirectscheme.scheme=https"
+#      - "traefik.http.routers.stream.middlewares=stream-https-redirect"
+#      - "traefik.http.routers.stream-secure.entrypoints=https"
+#      - "traefik.http.routers.stream-secure.rule=Host(`stream.ndd.fr`)"
+#      - "traefik.http.routers.stream-secure.tls=true"
+#      - "traefik.http.routers.stream-secure.tls.certresolver=http"
+#      - "traefik.http.services.stream-secure.loadbalancer.server.port=8096"
+#      - "traefik.docker.network=proxy"
+#      
+#networks:
+#  proxy:
+#    external:
+#      name: proxy

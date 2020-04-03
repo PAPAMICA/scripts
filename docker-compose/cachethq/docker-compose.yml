@@ -1,0 +1,80 @@
+# Docker-compose pour Cachet avec le support de Zabbix et de Traefik
+# Pour Traefik, pensez a décommenter les lignes networks et labels.
+
+#By PAPAMICA
+version: "2"
+
+services:
+  postgres:
+    container_name: cachet-db
+    image: postgres:9.5
+    volumes:
+      - /apps/cachet/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    restart: always
+#    networks:
+#      - proxy
+
+  cachet:
+    image: cachethq/docker
+    ports:
+      - 8580:8000
+    container_name: cachet
+    volumes:
+      - /apps/cachet/data:/var/www/html/
+    links:
+      - postgres:postgres
+    environment:
+      - MAIL_DRIVER=smtp
+      - MAIL_HOST=SSL0.OVH.NET
+      - MAIL_PORT=587
+      - MAIL_USERNAME=email@domaine.fr
+      - MAIL_PASSWORD=password
+      - MAIL_ADDRESS=email@domaine.fr
+      - MAIL_NAME=Notifications
+#      - MAIL_ENCRYPTION=tls
+      - DB_DRIVER=pgsql
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_DATABASE=postgres
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=postgres
+      - DB_PREFIX=chq_
+      - APP_KEY= # VOIR DOC CACHET 
+      - APP_LOG=errorlog
+#      - APP_ENV=${APP_ENV:-production}
+      - APP_DEBUG=false
+      - DEBUG=false
+    depends_on:
+      - postgres
+    restart: always
+#    networks:
+#      - proxy
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.status.entrypoints=http"
+#      - "traefik.http.routers.status.rule=Host(`status.nomdedomaine.fr`)"
+#      - "traefik.http.middlewares.status-https-redirect.redirectscheme.scheme=https"
+#      - "traefik.http.routers.status.middlewares=status-https-redirect"
+#      - "traefik.http.routers.status-secure.entrypoints=https"
+#      - "traefik.http.routers.status-secure.rule=Host(`status.nomdedomaine.fr`)"
+#      - "traefik.http.routers.status-secure.tls=true"
+#      - "traefik.http.routers.status-secure.tls.certresolver=http"
+#      - "traefik.http.services.status-secure.loadbalancer.server.port=8000"
+#      - "traefik.docker.network=proxy"
+
+  zabbix-cachet:
+    image: qk4l/zabbix-cachet
+    container_name: cachet-zabbix
+    volumes:
+      - /apps/cachet/config.yml:/config.yml
+    restart: always
+#    networks:
+#      - proxy
+      
+#networks:
+#  proxy:
+#    external:
+#      name: proxy

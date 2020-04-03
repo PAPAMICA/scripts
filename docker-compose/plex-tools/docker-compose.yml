@@ -1,0 +1,326 @@
+# Docker-compose pour les outils Plex avec le support de Traefik
+# Pour Traefik, pensez a décommenter les lignes networks et labels.
+
+#By PAPAMICA
+version: '2'
+
+services:
+  influxdb:
+    hostname: influxdb
+    container_name: varken-influxdb
+    image: influxdb
+#    networks:
+#      - proxy
+    volumes:
+      - /apps/varken/db:/var/lib/influxdb
+    restart: unless-stopped
+    
+  varken:
+    hostname: varken
+    container_name: varken
+    image: boerderij/varken
+#    networks:
+#      - proxy
+    volumes:
+      - /apps/varken/config:/config
+    environment:
+      - DEBUG=True
+      - TZ=Europe/Paris
+      - VRKN_GLOBAL_SONARR_SERVER_IDS=1,2
+      - VRKN_GLOBAL_RADARR_SERVER_IDS=1,2
+#      - VRKN_GLOBAL_LIDARR_SERVER_IDS=false
+#      - VRKN_GLOBAL_TAUTULLI_SERVER_IDS=1
+      - VRKN_GLOBAL_OMBI_SERVER_IDS=1
+#      - VRKN_GLOBAL_SICKCHILL_SERVER_IDS=false
+#      - VRKN_GLOBAL_UNIFI_SERVER_IDS=false
+#      - VRKN_GLOBAL_MAXMIND_LICENSE_KEY=xxxxxxxxxxxxxxxx
+      - VRKN_INFLUXDB_URL=172.18.0.16
+      - VRKN_INFLUXDB_PORT=8086
+      - VRKN_INFLUXDB_SSL=false
+      - VRKN_INFLUXDB_VERIFY_SSL=false
+      - VRKN_INFLUXDB_USERNAME=root
+      - VRKN_INFLUXDB_PASSWORD=root
+#      - VRKN_TAUTULLI_1_URL=172.18.0.10:8181
+#      - VRKN_TAUTULLI_1_FALLBACK_IP=1.1.1.1
+#      - VRKN_TAUTULLI_1_APIKEY=d6263ec6a8a44487bcff430a381a35e8
+#      - VRKN_TAUTULLI_1_SSL=false
+#      - VRKN_TAUTULLI_1_VERIFY_SSL=false
+#      - VRKN_TAUTULLI_1_GET_ACTIVITY=true
+#      - VRKN_TAUTULLI_1_GET_ACTIVITY_RUN_SECONDS=30
+#      - VRKN_TAUTULLI_1_GET_STATS=true
+#      - VRKN_TAUTULLI_1_GET_STATS_RUN_SECONDS=3600
+      - VRKN_SONARR_1_URL=sonarr1.domain.tld:8989
+      - VRKN_SONARR_1_APIKEY=xxxxxxxxxxxxxxxx
+      - VRKN_SONARR_1_SSL=false
+      - VRKN_SONARR_1_VERIFY_SSL=false
+      - VRKN_SONARR_1_MISSING_DAYS=7
+      - VRKN_SONARR_1_MISSING_DAYS_RUN_SECONDS=300
+      - VRKN_SONARR_1_FUTURE_DAYS=1
+      - VRKN_SONARR_1_FUTURE_DAYS_RUN_SECONDS=300
+      - VRKN_SONARR_1_QUEUE=true
+      - VRKN_SONARR_1_QUEUE_RUN_SECONDS=300
+      - VRKN_SONARR_2_URL=sonarr2.domain.tld:8989
+      - VRKN_SONARR_2_APIKEY=yyyyyyyyyyyyyyyy
+      - VRKN_SONARR_2_SSL=false
+      - VRKN_SONARR_2_VERIFY_SSL=false
+      - VRKN_SONARR_2_MISSING_DAYS=7
+      - VRKN_SONARR_2_MISSING_DAYS_RUN_SECONDS=300
+      - VRKN_SONARR_2_FUTURE_DAYS=1
+      - VRKN_SONARR_2_FUTURE_DAYS_RUN_SECONDS=300
+      - VRKN_SONARR_2_QUEUE=true
+      - VRKN_SONARR_2_QUEUE_RUN_SECONDS=300
+      - VRKN_RADARR_1_URL=radarr1.domain.tld
+      - VRKN_RADARR_1_APIKEY=xxxxxxxxxxxxxxxx
+      - VRKN_RADARR_1_SSL=false
+      - VRKN_RADARR_1_VERIFY_SSL=false
+      - VRKN_RADARR_1_QUEUE=true
+      - VRKN_RADARR_1_QUEUE_RUN_SECONDS=300
+      - VRKN_RADARR_1_GET_MISSING=true
+      - VRKN_RADARR_1_GET_MISSING_RUN_SECONDS=300
+      - VRKN_RADARR_2_URL=radarr2.domain.tld
+      - VRKN_RADARR_2_APIKEY=yyyyyyyyyyyyyyyy
+      - VRKN_RADARR_2_SSL=false
+      - VRKN_RADARR_2_VERIFY_SSL=false
+      - VRKN_RADARR_2_QUEUE=true
+      - VRKN_RADARR_2_QUEUE_RUN_SECONDS=300
+      - VRKN_RADARR_2_GET_MISSING=true
+      - VRKN_RADARR_2_GET_MISSING_RUN_SECONDS=300
+#      - VRKN_LIDARR_1_URL=lidarr1.domain.tld:8686
+#      - VRKN_LIDARR_1_APIKEY=xxxxxxxxxxxxxxxx
+#      - VRKN_LIDARR_1_SSL=false
+#      - VRKN_LIDARR_1_VERIFY_SSL=false
+#      - VRKN_LIDARR_1_MISSING_DAYS=30
+#      - VRKN_LIDARR_1_MISSING_DAYS_RUN_SECONDS=300
+#      - VRKN_LIDARR_1_FUTURE_DAYS=30
+#      - VRKN_LIDARR_1_FUTURE_DAYS_RUN_SECONDS=300
+#      - VRKN_LIDARR_1_QUEUE=true
+#      - VRKN_LIDARR_1_QUEUE_RUN_SECONDS=300
+#      - VRKN_OMBI_1_URL=ombi.domain.tld
+#      - VRKN_OMBI_1_APIKEY=xxxxxxxxxxxxxxxx
+#      - VRKN_OMBI_1_SSL=false
+#      - VRKN_OMBI_1_VERIFY_SSL=false
+#      - VRKN_OMBI_1_GET_REQUEST_TYPE_COUNTS=true
+#      - VRKN_OMBI_1_REQUEST_TYPE_RUN_SECONDS=300
+#      - VRKN_OMBI_1_GET_REQUEST_TOTAL_COUNTS=true
+#      - VRKN_OMBI_1_REQUEST_TOTAL_RUN_SECONDS=300
+#      - VRKN_OMBI_1_GET_ISSUE_STATUS_COUNTS=true
+#      - VRKN_OMBI_1_ISSUE_STATUS_RUN_SECONDS=300
+    depends_on:
+      - influxdb
+    restart: unless-stopped
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.varken.entrypoints=http"
+#      - "traefik.http.routers.varken.rule=Host(`varken.ndd.fr`)"
+#      - "traefik.http.middlewares.varken-https-redirect.redirectscheme.scheme=https"
+#      - "traefik.http.routers.varken.middlewares=varken-https-redirect"
+#      - "traefik.http.routers.varken-secure.entrypoints=https"
+#      - "traefik.http.routers.varken-secure.rule=Host(`varken.ndd.fr`)"
+#      - "traefik.http.routers.varken-secure.tls=true"
+#      - "traefik.http.routers.varken-secure.tls.certresolver=http"
+#      - "traefik.docker.network=proxy"
+    
+  grafana:
+    hostname: grafana
+    container_name: varken-grafana
+    image: grafana/grafana
+#    networks:
+#      - proxy
+    ports:
+      - 3001:3000
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.grafana.entrypoints=http"
+#      - "traefik.http.routers.grafana.rule=Host(`grafana.ndd.fr`)"
+#      - "traefik.http.middlewares.grafana-https-redirect.redirectscheme.scheme=https"
+#      - "traefik.http.routers.grafana.middlewares=grafana-https-redirect"
+#      - "traefik.http.routers.grafana-secure.entrypoints=https"
+#      - "traefik.http.routers.grafana-secure.rule=Host(`grafana.ndd.fr`)"
+#      - "traefik.http.routers.grafana-secure.tls=true"
+#      - "traefik.http.routers.grafana-secure.tls.certresolver=http"
+#      - "traefik.http.services.grafana-secure.loadbalancer.server.port=3000"
+#      - "traefik.docker.network=proxy"
+    volumes: 
+      - /apps/varken/grafana:/config
+    environment:
+      - GF_PATHS_DATA=/config/data
+      - GF_PATHS_LOGS=/config/logs
+      - GF_PATHS_PLUGINS=/config/plugins
+      - GF_INSTALL_PLUGINS=grafana-piechart-panel,grafana-worldmap-panel
+    depends_on:
+      - influxdb
+      - varken
+    restart: unless-stopped
+    
+    
+  nzbget:
+    image: linuxserver/nzbget
+    container_name: nzbget
+    volumes:
+        - /apps/nzbget/config:/config
+        - /DATA:/downloads
+    restart: always
+    environment:
+        - TZ=Europe/Paris
+    ports:
+        - 6789:6789
+#    networks:
+#      - proxy
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.nzbget.entrypoints=http"
+#      - "traefik.http.routers.nzbget.rule=Host(`nzbget.ndd.fr`)"
+#      - "traefik.http.middlewares.nzbget-https-redirect.redirectscheme.scheme=https"
+#      - "traefik.http.routers.nzbget.middlewares=nzbget-https-redirect"
+#      - "traefik.http.routers.nzbget-secure.entrypoints=https"
+#      - "traefik.http.routers.nzbget-secure.rule=Host(`nzbget.ndd.fr`)"
+#      - "traefik.http.routers.nzbget-secure.tls=true"
+#      - "traefik.http.routers.nzbget-secure.tls.certresolver=http"
+#      - "traefik.http.services.nzbget-secure.loadbalancer.server.port=6789"
+#      - "traefik.docker.network=proxy"
+      
+  sonarr:
+    image: linuxserver/sonarr
+    container_name: sonarr
+    depends_on:
+        - nzbget
+    volumes:
+        - /apps/sonarr/config:/config
+        - /DATA/DOWNLOADS:/downloads
+        - /DATA/SERIES:/tv
+    environment:
+        - TZ=Europe/Paris
+    ports:
+        - 8989:8989
+#    networks:
+#      - proxy
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.sonarr.entrypoints=http"
+#      - "traefik.http.routers.sonarr.rule=Host(`sonarr.ndd.fr`)"
+#      - "traefik.http.middlewares.sonarr-https-redirect.redirectscheme.scheme=https"
+#      - "traefik.http.routers.sonarr.middlewares=sonarr-https-redirect"
+#      - "traefik.http.routers.sonarr-secure.entrypoints=https"
+#      - "traefik.http.routers.sonarr-secure.rule=Host(`sonarr.ndd.fr`)"
+#      - "traefik.http.routers.sonarr-secure.tls=true"
+#      - "traefik.http.routers.sonarr-secure.tls.certresolver=http"
+#      - "traefik.http.services.sonarr-secure.loadbalancer.server.port=8989"
+#      - "traefik.docker.network=proxy"
+      
+  radarr:
+    image: linuxserver/radarr
+    container_name: radarr
+    depends_on:
+        - nzbget
+    volumes:
+        - /apps/radarr/config:/config
+        - /DATA/DOWNLOADS:/downloads
+        - /DATA/FILMS:/movies
+    environment:
+        - TZ=Europe/Paris
+        - PUID=1000
+        - PGID=1000
+    ports:
+        - 7878:7878
+#    networks:
+#      - proxy
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.radarr.entrypoints=http"
+#      - "traefik.http.routers.radarr.rule=Host(`radarr.ndd.fr`)"
+#      - "traefik.http.middlewares.radarr-https-redirect.redirectscheme.scheme=https"
+#      - "traefik.http.routers.radarr.middlewares=radarr-https-redirect"
+#      - "traefik.http.routers.radarr-secure.entrypoints=https"
+#      - "traefik.http.routers.radarr-secure.rule=Host(`radarr.ndd.fr`)"
+#      - "traefik.http.routers.radarr-secure.tls=true"
+#      - "traefik.http.routers.radarr-secure.tls.certresolver=http"
+#      - "traefik.http.services.radarr-secure.loadbalancer.server.port=7878"
+#      - "traefik.docker.network=proxy"
+      
+  ombi:
+    image: linuxserver/ombi
+    container_name: ombi
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Paris
+    volumes:
+      - /apps/ombi/config:/config
+    ports:
+      - 3579:3579
+    restart: unless-stopped
+#    networks:
+#      - proxy
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.ombi.entrypoints=http"
+#      - "traefik.http.routers.ombi.rule=Host(`ombi.ndd.fr`)"
+#      - "traefik.http.middlewares.ombi-https-redirect.redirectscheme.scheme=https"
+#      - "traefik.http.routers.ombi.middlewares=ombi-https-redirect"
+#      - "traefik.http.routers.ombi-secure.entrypoints=https"
+#      - "traefik.http.routers.ombi-secure.rule=Host(`ombi.ndd.fr`)"
+#      - "traefik.http.routers.ombi-secure.tls=true"
+#      - "traefik.http.routers.ombi-secure.tls.certresolver=http"
+#      - "traefik.http.services.ombi-secure.loadbalancer.server.port=3579"
+#      - "traefik.docker.network=proxy"
+      
+  jackett:
+    image: linuxserver/jackett
+    container_name: jackett
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Paris
+    volumes:
+      - /apps/jackett/config:/config
+      - /DATA:/downloads
+    ports:
+      - 9117:9117
+    restart: unless-stopped
+#    networks:
+#      - proxy
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.jackett.entrypoints=http"
+#      - "traefik.http.routers.jackett.rule=Host(`jackett.ndd.fr`)"
+#      - "traefik.http.middlewares.jackett-https-redirect.redirectscheme.scheme=https"
+#      - "traefik.http.routers.jackett.middlewares=jackett-https-redirect"
+#      - "traefik.http.routers.jackett-secure.entrypoints=https"
+#      - "traefik.http.routers.jackett-secure.rule=Host(`jackett.ndd.fr`)"
+#      - "traefik.http.routers.jackett-secure.tls=true"
+#      - "traefik.http.routers.jackett-secure.tls.certresolver=http"
+#      - "traefik.http.services.jackett-secure.loadbalancer.server.port=9117"
+#      - "traefik.docker.network=proxy"
+  
+  tautulli:
+    image: linuxserver/tautulli
+    container_name: tautulli
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Paris
+    volumes:
+      - /apps/tautulli/config:/config
+      - /apps/tautulli/logs:/logs
+    ports:
+      - 8181:8181
+    restart: unless-stopped
+#    networks:
+#      - proxy
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.tautulli.entrypoints=http"
+#      - "traefik.http.routers.tautulli.rule=Host(`tautulli.ndd.fr`)"
+#      - "traefik.http.middlewares.tautulli-https-redirect.redirectscheme.scheme=https"
+#      - "traefik.http.routers.tautulli.middlewares=tautulli-https-redirect"
+#      - "traefik.http.routers.tautulli-secure.entrypoints=https"
+#      - "traefik.http.routers.tautulli-secure.rule=Host(`tautulli.ndd.fr`)"
+#      - "traefik.http.routers.tautulli-secure.tls=true"
+#      - "traefik.http.routers.tautulli-secure.tls.certresolver=http"
+#      - "traefik.http.services.tautulli-secure.loadbalancer.server.port=8181"
+#      - "traefik.docker.network=proxy"
+    
+#networks:
+#  proxy:
+#    external:
+#      name: proxy

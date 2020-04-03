@@ -1,0 +1,77 @@
+# Docker-compose pour Nextcloud avec le support de Traefik
+# Pour Traefik, pensez a décommenter les lignes networks et labels.
+
+#By PAPAMICA
+
+version: "2"
+services:
+  nextcloud:
+    image: wonderfall/nextcloud
+    container_name: nextcloud
+    depends_on:
+      - nextcloud-db           # If using MySQL
+#      - nextcloud-redis                  # If using Redis
+    environment:
+      - UID=1000
+      - GID=1000
+      - UPLOAD_MAX_SIZE=20G
+      - APC_SHM_SIZE=128M
+      - OPCACHE_MEM_SIZE=128
+      - CRON_PERIOD=15m
+      - TZ=Europe/Paris
+      - DOMAIN=nextcloud.ndd.fr
+      - DB_TYPE=mysql
+      - DB_NAME=nextcloud
+      - DB_USER=nextcloud
+      - DB_PASSWORD=supersecretpassword321
+      - DB_HOST=nextcloud-db
+    volumes:
+      - /DATA/NEXTCLOUD:/data
+      - /DATA/FILMS:/ORION/MULTIMEDIA/FILMS
+      - /DATA/SERIES:/ORION/MULTIMEDIA/SERIES
+      - /DATA/PROJETS:/ORION/PROJETS
+      - /DATA/TECHNIQUES:/ORION/TECHNIQUES
+      - /apps/nextcloud/config:/config
+      - /apps/nextcloud/apps:/apps2
+      - /apps/nextcloud/themes:/nextcloud/themes
+#    networks:
+#      - proxy
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.nextcloud.entrypoints=http"
+#      - "traefik.http.routers.nextcloud.rule=Host(`nextcloud.ndd.fr`)"
+#      - "traefik.http.middlewares.nextcloud-https-redirect.redirectscheme.scheme=https"
+#      - "traefik.http.routers.nextcloud.middlewares=nextcloud-https-redirect"
+#      - "traefik.http.routers.nextcloud-secure.entrypoints=https"
+#      - "traefik.http.routers.nextcloud-secure.rule=Host(`nextcloud.ndd.fr`)"
+#      - "traefik.http.routers.nextcloud-secure.tls=true"
+#      - "traefik.http.routers.nextcloud-secure.tls.certresolver=http"
+#      - "traefik.docker.network=proxy"     
+
+  # If using MySQL
+  nextcloud-db:
+    image: mariadb
+    container_name: nextcloud-mariadb
+    volumes:
+      - /apps/nextcloud/db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=supersecretpassword321
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      - MYSQL_PASSWORD=supersecretpassword321
+#    networks:
+#      - proxy
+
+#  # If using Redis
+#  nextcloud-redis:
+#    image: redis:alpine
+#    container_name: nextcloud-redis
+#    volumes:
+#      - /apps/nextcloud/redis:/data
+#    networks:
+#      - proxy
+
+#networks:
+#  proxy:
+#    external:
+#      name: proxy

@@ -1,0 +1,38 @@
+# Docker-compose pour FloodTorrent avec le support de Traefik
+# Pour Traefik, pensez a décommenter les lignes networks et labels.
+
+#By PAPAMICA
+
+version: '2'
+services:
+    flood-torrent:
+        container_name: flood-torrent
+        volumes:
+            - /apps/flood-torrent/db:/flood-db
+            - /DATA:/data
+        environment:
+            - PGID=1000
+            - PUID=1000
+            - TZ=Europe/Paris
+        ports:
+            - 49184:49184        
+            - 3000:3000
+        image: wonderfall/rtorrent-flood:new
+        restart: unless-stopped
+#        networks:
+#            - proxy
+#        labels:
+#            - "traefik.enable=true"
+#            - "traefik.http.routers.torrent.entrypoints=http"
+#            - "traefik.http.routers.torrent.rule=Host(`torrent.papamica.fr`)"
+#            - "traefik.http.middlewares.torrent-https-redirect.redirectscheme.scheme=https"
+#            - "traefik.http.routers.torrent.middlewares=torrent-https-redirect"
+#            - "traefik.http.routers.torrent-secure.entrypoints=https"
+#            - "traefik.http.routers.torrent-secure.rule=Host(`torrent.papamica.fr`)"
+#            - "traefik.http.routers.torrent-secure.tls=true"
+#            - "traefik.http.routers.torrent-secure.tls.certresolver=http"
+#            - "traefik.docker.network=proxy"
+#networks:
+#    proxy:
+#        external:
+#            name: proxy

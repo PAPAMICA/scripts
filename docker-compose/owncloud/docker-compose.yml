@@ -1,0 +1,74 @@
+# Docker-compose pour OwnCloud avec le support de Traefik
+# Pour Traefik, pensez a décommenter les lignes networks et labels.
+
+#By PAPAMICA
+version: "2"
+services:
+  owncloud:
+    image: owncloud/server
+    container_name: owncloud
+    restart: always
+    ports:
+      - 8745:8080
+    depends_on:
+      - db
+      - redis
+    environment:
+      - OWNCLOUD_DOMAIN=owncloud.ndd.fr
+      - OWNCLOUD_DB_TYPE=mysql
+      - OWNCLOUD_DB_NAME=owncloud
+      - OWNCLOUD_DB_USERNAME=owncloud
+      - OWNCLOUD_DB_PASSWORD=owncloud123
+      - OWNCLOUD_DB_HOST=db
+      - OWNCLOUD_ADMIN_USERNAME=USER
+      - OWNCLOUD_ADMIN_PASSWORD=PASSWORD
+      - OWNCLOUD_MYSQL_UTF8MB4=true
+      - OWNCLOUD_REDIS_ENABLED=true
+      - OWNCLOUD_REDIS_HOST=redis
+    volumes:
+      - /DATA:/mnt/data
+#    networks:
+#      - proxy
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.owncloud.entrypoints=http"
+#      - "traefik.http.routers.owncloud.rule=Host(`owncloud.ndd.fr`)"
+#      - "traefik.http.middlewares.owncloud-https-redirect.redirectscheme.scheme=https"
+#      - "traefik.http.routers.owncloud.middlewares=owncloud-https-redirect"
+#      - "traefik.http.routers.owncloud-secure.entrypoints=https"
+#      - "traefik.http.routers.owncloud-secure.rule=Host(`owncloud.ndd.fr`)"
+#      - "traefik.http.routers.owncloud-secure.tls=true"
+#      - "traefik.http.routers.owncloud-secure.tls.certresolver=http"
+#      - "traefik.docker.network=proxy"
+#
+  db:
+    image: webhippie/mariadb:latest
+    restart: always
+    container_name: owncloud-db
+    environment:
+      - MARIADB_ROOT_PASSWORD=owncloud
+      - MARIADB_USERNAME=owncloud
+      - MARIADB_PASSWORD=owncloud123
+      - MARIADB_DATABASE=owncloud
+      - MARIADB_MAX_ALLOWED_PACKET=128M
+      - MARIADB_INNODB_LOG_FILE_SIZE=64M
+    volumes:
+      - /apps/owncloud/db:/var/lib/mysql
+      - /apps/owncloud/backup:/var/lib/backup
+#    networks:
+#      - proxy
+
+  redis:
+    image: webhippie/redis:latest
+    restart: always
+    container_name: owncloud-redis
+    environment:
+      - REDIS_DATABASES=1
+    volumes:
+      - /apps/owncloud/redis:/var/lib/redis
+#    networks:
+#      - proxy
+#networks:
+#  proxy:
+#    external:
+#      name: proxy

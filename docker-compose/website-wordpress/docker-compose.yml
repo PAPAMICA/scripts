@@ -1,0 +1,56 @@
+# Docker-compose pour Website-Wordpress avec le support de Traefik
+# Pour Traefik, pensez a décommenter les lignes networks et labels.
+
+#By PAPAMICA
+version: '2'
+services:
+  mariadb:
+    image: 'bitnami/mariadb'
+    container_name: site-wp-db
+    volumes:
+      - /apps/site/portfolio/db:/bitnami'
+    environment:
+      - MARIADB_USER=wordpress
+      - MARIADB_DATABASE=wordpress
+      - MARIADB_ROOT_PASSWORD=wordpress1309
+      - ALLOW_EMPTY_PASSWORD=yes
+    networks:
+      - proxy
+      
+  wordpress:
+    image: 'bitnami/wordpress'
+    volumes:
+      - '/apps/site/portfolio/wp:/bitnami'
+    container_name: site-wp
+    depends_on:
+      - mariadb
+    environment:
+      - MARIADB_HOST=site-wp-db
+      - MARIADB_PORT_NUMBER=3306
+      - WORDPRESS_DATABASE_USER=wordpress
+      - WORDPRESS_DATABASE_NAME=wordpress
+      - ALLOW_EMPTY_PASSWORD=yes
+      - WORDPRESS_USERNAME=PAPAMICA
+      - WORDPRESS_PASSWORD=mdp1309
+      - WORDPRESS_EMAIL=admin@ndd.fr
+    ports:
+      - 80:80
+#    networks:
+#      - proxy
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.portfolio.entrypoints=http"
+#      - "traefik.http.routers.portfolio.rule=Host(`portfolio.ndd.fr`)"
+#      - "traefik.http.middlewares.portfolio-https-redirect.redirectscheme.scheme=https"
+#      - "traefik.http.routers.portfolio.middlewares=portfolio-https-redirect"
+#      - "traefik.http.routers.portfolio-secure.entrypoints=https"
+#      - "traefik.http.routers.portfolio-secure.rule=Host(`portfolio.ndd.fr`)"
+#      - "traefik.http.routers.portfolio-secure.tls=true"
+#      - "traefik.http.routers.portfolio-secure.tls.certresolver=http"
+#      - "traefik.docker.network=proxy"
+#  
+#networks:
+#  proxy:
+#    external:
+#      name: proxy
+     
