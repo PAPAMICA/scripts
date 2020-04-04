@@ -5,18 +5,37 @@
 #                                                  #
 ####################################################
 
+
+function Verif-System {
+  user=$(whoami)
+
+  if [ $(whoami) != "root" ]
+    then
+    tput setaf 5; echo "ERREUR : Veuillez exécuter le script en tant que Root !"
+    exit
+  fi
+
+  if [[ $(arch) != *"64" ]]
+    then
+    tput setaf 5; echo "ERREUR : Veuillez installer une version x64 !"
+    exit
+  fi
+  
+}
+
 # Changement des sources APT
+version=$(grep "VERSION=" /etc/os-release |awk -F= {' print $2'}|sed s/\"//g |sed s/[0-9]//g | sed s/\)$//g |sed s/\(//g)
 function Change-Source {
-  echo "deb http://debian.mirrors.ovh.net/debian/ buster main contrib non-free
-  deb-src http://debian.mirrors.ovh.net/debian/ buster main contrib non-free
+  echo "deb http://debian.mirrors.ovh.net/debian/ $version main contrib non-free
+  deb-src http://debian.mirrors.ovh.net/debian/ $version main contrib non-free
   
-  deb http://security.debian.org/ buster/updates main contrib non-free
-  deb-src http://security.debian.org/ buster/updates main contrib non-free
+  deb http://security.debian.org/ $version/updates main contrib non-free
+  deb-src http://security.debian.org/ $version/updates main contrib non-free
   
-  # buster-updates, previously known as 'volatile'
-  deb http://debian.mirrors.ovh.net/debian/ buster-updates main contrib non-free
-  deb-src http://debian.mirrors.ovh.net/debian/ buster-updates main contrib non-free" > /etc/apt/sources.list
-  echo 'deb http://deb.debian.org/debian buster-backports main' > \
+  # $version-updates, previously known as 'volatile'
+  deb http://debian.mirrors.ovh.net/debian/ $version-updates main contrib non-free
+  deb-src http://debian.mirrors.ovh.net/debian/ $version-updates main contrib non-free" > /etc/apt/sources.list
+  echo 'deb http://deb.debian.org/debian $version-backports main' > \
    /etc/apt/sources.list.d/backports.list
 }
 
@@ -70,8 +89,8 @@ function Update-db {
 }
 #Configuration et installation de Traefik et de Portainer
 function Install-TraefikPortainer {
-  tput setaf 6; read -p "Entrez votre nom de domaine (ex : papamica.fr) : " ndd
-  tput setaf 6; read -p "Entrez votre adresse mail pour Let's Encrypt : " email
+  tput setaf 6; read -p "===>     Entrez votre nom de domaine (ex : papamica.fr) : " ndd
+  tput setaf 6; read -p "===>     Entrez votre adresse mail pour Let's Encrypt : " email
   
   mkdir -p /apps/traefik
   mkdir -p /apps/portainer
@@ -203,31 +222,31 @@ networks:
 }
 
 function Change-Password {
-  tput setaf 6; read -p "Entrez le mot de passe pour Root : " password_root
+  tput setaf 6; read -p "===>     Entrez le mot de passe pour Root : " password_root
   tput setaf 6; echo "root:$password_root" | chpasswd
-  tput setaf 7; echo "-------------------------------------------------"
-  tput setaf 7; echo "    => Mot de passe de Root a été changé."
-  tput setaf 7; echo "-------------------------------------------------"
-  tput setaf 6; read -p "Entrez un nom d'utilisateur : " name_user
-  tput setaf 6; read -p "Entrez le mot de passe pour l'utilisateur $name_user : " password_user
+  tput setaf 7; echo "-------------------------------------------------------"
+  tput setaf 7; echo "        => Mot de passe de Root a été changé."
+  tput setaf 7; echo "-------------------------------------------------------"
+  tput setaf 6; read -p "===>     Entrez un nom d'utilisateur : " name_user
+  tput setaf 6; read -p "===>     Entrez le mot de passe pour l'utilisateur $name_user : " password_user
   tput setaf 2; adduser --quiet --disabled-password --shell /bin/bash --home /home/$name_user --gecos "User" $name_user
   tput setaf 2; echo "$name_user:$password_user" | chpasswd
   tput setaf 2; adduser $name_user sudo
-  tput setaf 7; echo "-------------------------------------------------"
-  tput bold; tput setaf 7; echo "    => L'utilisateur $name_user a été créé."
-  tput bold; tput setaf 7; echo "    => $name_user fait parti du groupe sudo."
-  tput setaf 7; echo "-------------------------------------------------"
+  tput setaf 7; echo "-------------------------------------------------------"
+  tput bold; tput setaf 7; echo "        => L'utilisateur $name_user a été créé."
+  tput bold; tput setaf 7; echo "        => $name_user fait parti du groupe sudo."
+  tput setaf 7; echo "-------------------------------------------------------"
 }
 
 # Changement du motd
 function Change-MOTD {
   ip_du_serveur=$(hostname -i)
-  tput setaf 7; echo "-------------------------------------------------"
-  tput bold; tput setaf 7; echo " => L'adresse IP du serveur est $ip_du_serveur."
-  tput setaf 7; echo "-------------------------------------------------"
+  tput setaf 7; echo "-------------------------------------------------------"
+  tput bold; tput setaf 7; echo "      => L'adresse IP du serveur est $ip_du_serveur."
+  tput setaf 7; echo "-------------------------------------------------------"
 
-  tput setaf 6; read -p "Entrez le nom du serveur : " name_server
-  tput setaf 6; read -p "Entrez le nom de l'hébergeur : " name_provider
+  tput setaf 6; read -p "===>     Entrez le nom du serveur : " name_server
+  tput setaf 6; read -p "===>     Entrez le nom de l'hébergeur : " name_provider
 
   echo "
   ██╗    ██╗███████╗██╗      ██████╗ ██████╗ ███╗   ███╗███████╗
@@ -244,35 +263,59 @@ function Change-MOTD {
                Provider : $name_provider
 
   " > /etc/motd
-  tput setaf 7; echo "-------------------------------------------------"
-  tput setaf 7; echo "          => Le MOTD a été changé."
-  tput setaf 7; echo "-------------------------------------------------"
+  tput setaf 7; echo "-------------------------------------------------------"
+  tput setaf 7; echo "               => Le MOTD a été changé.                "
+  tput setaf 7; echo "-------------------------------------------------------"
 }
 #-----------------------------------------------------------------------------------------------------------------------------------
+tput setaf 7; echo "-------------------------------------------------------"
+tput setaf 7; echo "            Script d'installation de Debian            "
+tput setaf 7; echo "-------------------------------------------------------"
+
+tput setaf 6; echo "Vérification du système ................................................................... En cours"
+Verif-System
+tput setaf 7; echo "Vérification du système ................................................................... OK"
+echo ""
+
 
 tput setaf 6; echo "Configuration des sources ................................................................. En cours"
 Change-Source
 tput setaf 7; echo "Configuration des sources ................................................................. OK"
 echo ""
+
 tput setaf 6; echo "Installation des paquets essentiels........................................................ En cours"
 Install-PaquetsEssentiels
 tput setaf 7; echo "Installation des paquets essentiels........................................................ OK"
 echo ""
-tput setaf 6; echo "Installation de Docker..................................................................... En cours"
-Install-Docker
-tput setaf 7; echo "Installation de Docker..................................................................... OK"
-echo ""
+
 tput setaf 6; echo "Installation de ZSH........................................................................ En cours"
 Install-Zsh
 tput setaf 7; echo "Installation de ZSH........................................................................ OK"
 echo ""
+
 tput setaf 6; echo "Mise à jour de la base de données.......................................................... En cours"
 Update-db
 tput setaf 7; echo "Mise à jour de la base de données.......................................................... OK"
+
 echo ""
-tput setaf 6; echo "Installation de Traefik et de Portainer.................................................... En cours"
-Install-TraefikPortainer
-tput setaf 7; echo "Installation de Traefik et de Portainer.................................................... OK"
+echo ""
+tput setaf 2; read -p "Souhaitez vous installer Docker ? (y/n)  " install_docker
+if [ $install_docker = "y" ]
+  then
+  tput setaf 6; echo "Installation de Docker..................................................................... En cours"
+  Install-Docker
+  tput setaf 7; echo "Installation de Docker..................................................................... OK"
+fi
+
+echo ""
+echo ""
+tput setaf 2; read -p "Souhaitez vous installer Traefik et Portainer ? (y/n)  " install_traefik
+if [ $install_traefik = "y" ]
+  then
+  tput setaf 6; echo "Installation de Traefik et de Portainer.................................................... En cours"
+  Install-TraefikPortainer
+  tput setaf 7; echo "Installation de Traefik et de Portainer.................................................... OK"
+fi
 
 echo ""
 echo ""
@@ -300,9 +343,12 @@ echo ""
 tput setaf 7; echo "-------------------------------------------------------"
 tput bold; tput setaf 7; echo "              => PREPARATION TERMINEE <=               "
 tput setaf 7; echo ""
-tput bold; tput setaf 7; echo "Pensez à faire les redictions pour traefik et portainer"
-tput bold; tput setaf 7; echo "          Identifiant Traefik : admin / admin          "
-tput setaf 7; echo ""
+if [ $install_traefik = "y" ]
+  then
+  tput bold; tput setaf 7; echo "Pensez à faire les redictions pour traefik et portainer"
+  tput bold; tput setaf 7; echo "          Identifiant Traefik : admin / admin          "
+  tput setaf 7; echo ""
+fi
 tput bold; tput setaf 7; echo "               Veuillez vous reconnecter               "
 tput bold; tput setaf 6; echo "                      By PAPAMICA                      "
 tput bold; tput setaf 6; echo "                      Labo-Tech.fr                     "
