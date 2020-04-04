@@ -221,24 +221,24 @@ networks:
 
 function Change-Password {
   tput setaf 6; echo "root:$password_root" | chpasswd
-  tput setaf 7; echo "-------------------------------------------------------"
-  tput setaf 7; echo "        => Mot de passe de Root a été changé."
-  tput setaf 7; echo "-------------------------------------------------------"
+  tput setaf 7; echo "----------------------------------------------------------------------------------------------------"
+  tput setaf 7; echo "                                => Mot de passe de Root a été changé.                               "
+  tput setaf 7; echo "----------------------------------------------------------------------------------------------------"
   tput setaf 2; adduser --quiet --disabled-password --shell /bin/bash --home /home/$name_user --gecos "User" $name_user
   tput setaf 2; echo "$name_user:$password_user" | chpasswd
   tput setaf 2; adduser $name_user sudo
-  tput setaf 7; echo "-------------------------------------------------------"
-  tput bold; tput setaf 7; echo "        => L'utilisateur $name_user a été créé."
-  tput bold; tput setaf 7; echo "        => $name_user fait parti du groupe sudo."
-  tput setaf 7; echo "-------------------------------------------------------"
+  tput setaf 7; echo "----------------------------------------------------------------------------------------------------"
+  tput bold; tput setaf 7; echo "                         => L'utilisateur $name_user a été créé.                         "
+  tput bold; tput setaf 7; echo "                         => $name_user fait parti du groupe sudo.                        "
+  tput setaf 7; echo "----------------------------------------------------------------------------------------------------"
 }
 
 # Changement du motd
 function Change-MOTD {
   ip_du_serveur=$(hostname -i)
-  tput setaf 7; echo "-------------------------------------------------------"
-  tput bold; tput setaf 7; echo "      => L'adresse IP du serveur est $ip_du_serveur."
-  tput setaf 7; echo "-------------------------------------------------------"
+  tput setaf 7; echo "----------------------------------------------------------------------------------------------------"
+  tput bold; tput setaf 7; echo "                      => L'adresse IP du serveur est $ip_du_serveur.                     "
+  tput setaf 7; echo "----------------------------------------------------------------------------------------------------"
 
 
   echo "
@@ -256,43 +256,47 @@ function Change-MOTD {
                Provider : $name_provider
 
   " > /etc/motd
-  tput setaf 7; echo "-------------------------------------------------------"
-  tput setaf 7; echo "               => Le MOTD a été changé.                "
-  tput setaf 7; echo "-------------------------------------------------------"
+  tput setaf 7; echo "----------------------------------------------------------------------------------------------------"
+  tput setaf 7; echo "                                      => Le MOTD a été changé.                                      "
+  tput setaf 7; echo "----------------------------------------------------------------------------------------------------"
 }
 #-----------------------------------------------------------------------------------------------------------------------------------
-tput setaf 7; echo "-------------------------------------------------------"
-tput setaf 7; echo "            Script d'installation de Debian            "
-tput setaf 7; echo "-------------------------------------------------------"
+tput setaf 7; echo "----------------------------------------------------------------------------------------------------"
+tput setaf 7; echo "                                   Script d'installation de Debian                                  "
+tput setaf 7; echo "----------------------------------------------------------------------------------------------------"
 
-tput setaf 7; read -p "Souhaitez vous créer les utilisateurs ? (y/n)  " create_user
+tput setaf 6; read -p "Souhaitez vous créer les utilisateurs ? (y/n)  " create_user
 if [ $create_user = "y" ]
   then
-    tput setaf 7; read -p "===>     Entrez le mot de passe pour Root : " password_root
-    tput setaf 7; read -p "===>     Entrez un nom d'utilisateur : " name_user
-    tput setaf 7; read -p "===>     Entrez le mot de passe pour l'utilisateur $name_user : " password_user
+    tput setaf 6; read -p "===>     Entrez le mot de passe pour Root : " password_root
+    tput setaf 6; read -p "===>     Entrez un nom d'utilisateur : " name_user
+    tput setaf 6; read -p "===>     Entrez le mot de passe pour l'utilisateur $name_user : " password_user
 fi
 echo ""
 
-tput setaf 7; read -p "Souhaitez vous changer le MOTD ? (y/n)  " change_motd
+tput setaf 6; read -p "Souhaitez vous changer le MOTD ? (y/n)  " change_motd
 if [ $change_motd = "y" ]
   then
-  tput setaf 7; read -p "===>     Entrez le nom du serveur : " name_server
-  tput setaf 7; read -p "===>     Entrez le nom de l'hébergeur : " name_provider
+  tput setaf 6; read -p "===>     Entrez le nom du serveur : " name_server
+  tput setaf 6; read -p "===>     Entrez le nom de l'hébergeur : " name_provider
 fi
 echo ""
 
-tput setaf 7; read -p "Souhaitez vous installer Docker ? (y/n)  " install_docker
+tput setaf 6; read -p "Souhaitez vous installer Docker ? (y/n)  " install_docker
 if [ $install_docker = "y" ]
   then
   echo ""
-  tput setaf 7; read -p "Souhaitez vous installer Traefik et Portainer ? (y/n)  " install_traefik
+  tput setaf 6; read -p "Souhaitez vous installer Traefik et Portainer ? (y/n)  " install_traefik
   if [ $install_traefik = "y" ]
     then
-    tput setaf 7; read -p "===>     Entrez votre nom de domaine (ex : papamica.fr) : " ndd
-    tput setaf 7; read -p "===>     Entrez votre adresse mail pour Let's Encrypt : " email
+    tput setaf 6; read -p "===>     Entrez votre nom de domaine (ex : papamica.fr) : " ndd
+    tput setaf 6; read -p "===>     Entrez votre adresse mail pour Let's Encrypt : " email
   fi
 fi
+echo ""
+tput setaf 7; echo "----------------------------------------------------------------------------------------------------"
+tput setaf 7; echo "                                           Début du script                                          "
+tput setaf 7; echo "----------------------------------------------------------------------------------------------------"
 echo ""
 echo ""
 
@@ -361,7 +365,7 @@ docker container ls
 
 echo ""
 echo ""
-tput setaf 7; echo "-------------------------------------------------------"
+tput setaf 7; echo "----------------------------------------------------------------------------------------------------"
 tput bold; tput setaf 7; echo "              => PREPARATION TERMINEE <=               "
 tput setaf 7; echo ""
 if [ $install_traefik = "y" ]
@@ -373,5 +377,5 @@ fi
 tput bold; tput setaf 7; echo "               Veuillez vous reconnecter               "
 tput bold; tput setaf 6; echo "                      By PAPAMICA                      "
 tput bold; tput setaf 6; echo "                      Labo-Tech.fr                     "
-tput setaf 7; echo "-------------------------------------------------------"
+tput setaf 7; echo "----------------------------------------------------------------------------------------------------"
 tput setaf 2; echo ""
