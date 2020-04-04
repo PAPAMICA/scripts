@@ -45,8 +45,8 @@ chmod +x name_of_script.sh
 Et bien plus sont à venir !
 
 ### Script debian_postinstall.sh
-Le script est compatible avec Debian 8/9/10 x64.
-Le script doit être executé via l'utilisateur root.
+Le script est compatible avec Debian 8/9/10 x64.  
+Le script doit être executé via l'utilisateur root.  
 Voici les actions effectuées :
 + Configuration des sources
 + Mise à jour du serveur
@@ -59,10 +59,10 @@ Voici les actions effectuées :
 + Installation et configuration de Traefik et de Portainer
 
 # Docker-compose
-Les dockers-compose sont tous en version 2 et fonctionnent avec Portainer.
+Les dockers-compose sont tous en version 2 et fonctionnent avec Portainer.  
 Dans chaque docker-compose, les labels et le network (proxy) sont préconfigurer pour fonctionner avec Traefik.
 
-Ces docker-compose sont adapté à mes besoins, n'hésitez pas à les modifiers pour votre utilisation.
+Ces docker-compose sont adapté à mes besoins, n'hésitez pas à les modifiers pour votre utilisation.  
 Un bon moyen de vérifier les paramètres disponibles chaque image reste la petite recherche Google avec le nom de l'image ;)
 
 ### Utilisation
