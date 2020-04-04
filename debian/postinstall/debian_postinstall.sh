@@ -89,8 +89,6 @@ function Update-db {
 }
 #Configuration et installation de Traefik et de Portainer
 function Install-TraefikPortainer {
-  tput setaf 6; read -p "===>     Entrez votre nom de domaine (ex : papamica.fr) : " ndd
-  tput setaf 6; read -p "===>     Entrez votre adresse mail pour Let's Encrypt : " email
   
   mkdir -p /apps/traefik
   mkdir -p /apps/portainer
@@ -222,13 +220,10 @@ networks:
 }
 
 function Change-Password {
-  tput setaf 6; read -p "===>     Entrez le mot de passe pour Root : " password_root
   tput setaf 6; echo "root:$password_root" | chpasswd
   tput setaf 7; echo "-------------------------------------------------------"
   tput setaf 7; echo "        => Mot de passe de Root a été changé."
   tput setaf 7; echo "-------------------------------------------------------"
-  tput setaf 6; read -p "===>     Entrez un nom d'utilisateur : " name_user
-  tput setaf 6; read -p "===>     Entrez le mot de passe pour l'utilisateur $name_user : " password_user
   tput setaf 2; adduser --quiet --disabled-password --shell /bin/bash --home /home/$name_user --gecos "User" $name_user
   tput setaf 2; echo "$name_user:$password_user" | chpasswd
   tput setaf 2; adduser $name_user sudo
@@ -245,8 +240,6 @@ function Change-MOTD {
   tput bold; tput setaf 7; echo "      => L'adresse IP du serveur est $ip_du_serveur."
   tput setaf 7; echo "-------------------------------------------------------"
 
-  tput setaf 6; read -p "===>     Entrez le nom du serveur : " name_server
-  tput setaf 6; read -p "===>     Entrez le nom de l'hébergeur : " name_provider
 
   echo "
   ██╗    ██╗███████╗██╗      ██████╗ ██████╗ ███╗   ███╗███████╗
@@ -271,6 +264,38 @@ function Change-MOTD {
 tput setaf 7; echo "-------------------------------------------------------"
 tput setaf 7; echo "            Script d'installation de Debian            "
 tput setaf 7; echo "-------------------------------------------------------"
+
+tput setaf 7; read -p "Souhaitez vous créer les utilisateurs ? (y/n)  " create_user
+if [ $create_user = "y" ]
+  then
+    tput setaf 7; read -p "===>     Entrez le mot de passe pour Root : " password_root
+    tput setaf 7; read -p "===>     Entrez un nom d'utilisateur : " name_user
+    tput setaf 7; read -p "===>     Entrez le mot de passe pour l'utilisateur $name_user : " password_user
+fi
+echo ""
+
+tput setaf 7; read -p "Souhaitez vous changer le MOTD ? (y/n)  " change_motd
+if [ $change_motd = "y" ]
+  then
+  tput setaf 7; read -p "===>     Entrez le nom du serveur : " name_server
+  tput setaf 7; read -p "===>     Entrez le nom de l'hébergeur : " name_provider
+fi
+echo ""
+
+tput setaf 7; read -p "Souhaitez vous installer Docker ? (y/n)  " install_docker
+if [ $install_docker = "y" ]
+  then
+  echo ""
+  tput setaf 7; read -p "Souhaitez vous installer Traefik et Portainer ? (y/n)  " install_traefik
+  if [ $install_traefik = "y" ]
+    then
+    tput setaf 7; read -p "===>     Entrez votre nom de domaine (ex : papamica.fr) : " ndd
+    tput setaf 7; read -p "===>     Entrez votre adresse mail pour Let's Encrypt : " email
+  fi
+fi
+echo ""
+echo ""
+
 
 tput setaf 6; echo "Vérification du système ................................................................... En cours"
 Verif-System
@@ -299,7 +324,6 @@ tput setaf 7; echo "Mise à jour de la base de données.........................
 
 echo ""
 echo ""
-tput setaf 2; read -p "Souhaitez vous installer Docker ? (y/n)  " install_docker
 if [ $install_docker = "y" ]
   then
   tput setaf 6; echo "Installation de Docker..................................................................... En cours"
@@ -309,7 +333,6 @@ fi
 
 echo ""
 echo ""
-tput setaf 2; read -p "Souhaitez vous installer Traefik et Portainer ? (y/n)  " install_traefik
 if [ $install_traefik = "y" ]
   then
   tput setaf 6; echo "Installation de Traefik et de Portainer.................................................... En cours"
@@ -319,7 +342,6 @@ fi
 
 echo ""
 echo ""
-tput setaf 2; read -p "Souhaitez vous créer les utilisateurs ? (y/n)  " create_user
 if [ $create_user = "y" ]
 then
     Change-Password
@@ -327,7 +349,6 @@ fi
 
 echo ""
 echo ""
-tput setaf 2; read -p "Souhaitez vous changer le MOTD ? (y/n)  " change_motd
 if [ $change_motd = "y" ] 
 then
     Change-MOTD
