@@ -32,7 +32,7 @@ chmod +x name_of_script.sh
 
 ### Liste des scripts
 
-+ **Préparation VPS/VM** : debian_postinstall.sh
++ **Préparation VPS/VM** : debian_postinstall.sh (voir en dessous)
 + **Guacamole (Docker)** : debian_install_guacamole.sh
 + **iTop (Docker)** : debian_install_itop.sh
 + **Zabbix**
@@ -43,6 +43,20 @@ chmod +x name_of_script.sh
 + **GLPI (Docker)** : debian_install_glpi.sh
      
 Et bien plus sont à venir !
+
+### Script debian_postinstall.sh
+Le script est compatible avec Debian 8/9/10 x64.
+Le script doit être executé via l'utilisateur root.
+Voici les actions effectuées :
++ Configuration des sources
++ Mise à jour du serveur
++ Installation des paquets essentiels (sudo, openssh-server, cockpit, locate, curl)
++ Installation et configuration de ZSH et OhMyZsh
++ Changement du mot de passe Root
++ Création d'un utilisateur et ajout au groupe sudo
++ Changement du MOTD
++ Installation de Docker
++ Installation et configuration de Traefik et de Portainer
 
 # Docker-compose
 Les dockers-compose sont tous en version 2 et fonctionnent avec Portainer.
