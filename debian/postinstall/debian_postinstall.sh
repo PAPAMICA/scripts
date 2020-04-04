@@ -261,6 +261,7 @@ function Change-MOTD {
   tput setaf 7; echo "----------------------------------------------------------------------------------------------------"
 }
 #-----------------------------------------------------------------------------------------------------------------------------------
+clear
 tput setaf 7; echo "----------------------------------------------------------------------------------------------------"
 tput setaf 7; echo "                                   Script d'installation de Debian                                  "
 tput setaf 7; echo "----------------------------------------------------------------------------------------------------"
@@ -366,16 +367,16 @@ docker container ls
 echo ""
 echo ""
 tput setaf 7; echo "----------------------------------------------------------------------------------------------------"
-tput bold; tput setaf 7; echo "              => PREPARATION TERMINEE <=               "
+tput bold; tput setaf 7; echo "                               => PREPARATION TERMINEE <=                                "
 tput setaf 7; echo ""
 if [ $install_traefik = "y" ]
   then
-  tput bold; tput setaf 7; echo "Pensez à faire les redictions pour traefik et portainer"
-  tput bold; tput setaf 7; echo "          Identifiant Traefik : admin / admin          "
+  tput bold; tput setaf 7; echo "                Pensez à faire les redictions pour traefik et portainer                "
+  tput bold; tput setaf 7; echo "                          Identifiant Traefik : admin / admin                          "
   tput setaf 7; echo ""
 fi
-tput bold; tput setaf 7; echo "               Veuillez vous reconnecter               "
-tput bold; tput setaf 6; echo "                      By PAPAMICA                      "
-tput bold; tput setaf 6; echo "                      Labo-Tech.fr                     "
+tput bold; tput setaf 7; echo "                                Veuillez vous reconnecter                                "
+tput bold; tput setaf 6; echo "                                       By PAPAMICA                                       "
+tput bold; tput setaf 6; echo "                                       Labo-Tech.fr                                      "
 tput setaf 7; echo "----------------------------------------------------------------------------------------------------"
 tput setaf 2; echo ""
