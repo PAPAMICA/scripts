@@ -381,7 +381,7 @@ if [ $create_user = "y" ]
   then
   tput setaf 6; echo "Création des utilisateurs et changement des mots de passe.................................. En cours"
   Change-Password
-  tput setaf 6; echo "Création des utilisateurs et changement des mots de passe.................................. OK"
+  tput setaf 7; echo "Création des utilisateurs et changement des mots de passe.................................. OK"
 fi
 
 echo ""
@@ -390,7 +390,7 @@ if [ $change_sshport = "y" ]
   then
   tput setaf 6; echo "Changement du port SSH.................................................................... En cours"
   Change-SSHPort
-  tput setaf 6; echo "Changement du port SSH.................................................................... OK"
+  tput setaf 7; echo "Changement du port SSH.................................................................... OK"
 fi
 
 echo ""
@@ -399,7 +399,7 @@ if [ $change_motd = "y" ]
   then
   tput setaf 6; echo "Changement du MOTD....................................................................... En cours"
   Change-MOTD
-  tput setaf 6; echo "Changement du MOTD....................................................................... OK"
+  tput setaf 7; echo "Changement du MOTD....................................................................... OK"
 fi
 
 echo ""
@@ -420,7 +420,8 @@ tput bold; tput setaf 7; echo "                               => PREPARATION TER
 tput setaf 7; echo ""
 if [ $install_traefik = "y" ]
   then
-  tput bold; tput setaf 7; echo "                Pensez à faire les redictions pour traefik et portainer                "
+  tput bold; tput setaf 7; echo "                               Portainer.$ndd                                            "
+  tput bold; tput setaf 7; echo "                               Traefik.$ndd                                            "
   tput bold; tput setaf 7; echo "                          Identifiant Traefik : admin / admin                          "
   tput setaf 7; echo ""
 fi
