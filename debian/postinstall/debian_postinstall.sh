@@ -320,7 +320,7 @@ if [ $install_docker = "y" ]
       tput setaf 3; echo "=> Traefik : traefik.$ndd => IP WAN de votre serveur !"
       tput setaf 3; echo "=> Portainer : portainer.$ndd => IP WAN de votre serveur !"
       echo ""
-      tput setaf 3; echo "Les redirections ont bien été configurées ? (y/n) " redirection
+      tput setaf 3; read -p "Les redirections ont bien été configurées ? (y/n) " redirection
     done
   fi
 fi
