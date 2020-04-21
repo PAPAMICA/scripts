@@ -425,3 +425,8 @@ tput bold; tput setaf 6; echo "                                       By PAPAMIC
 tput bold; tput setaf 6; echo "                               Labo-Tech.fr / Tech2Tech.fr                               "
 tput setaf 7; echo "----------------------------------------------------------------------------------------------------"
 tput setaf 2; echo ""
+
+sleep 5
+# Redémarrage du service sshd
+/etc/init.d/sshd restart
+
