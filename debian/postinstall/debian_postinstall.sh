@@ -51,6 +51,7 @@ function Install-PaquetsEssentiels {
   apt install -y zsh
   apt install -y curl
   apt install -y fonts-powerline
+  apt install -y fail2ban
 }
 
 # Installation des dépendances et de docker
@@ -89,59 +90,59 @@ function Update-db {
 }
 #Configuration et installation de Traefik et de Portainer
 function Install-TraefikPortainer {
-  
-  mkdir -p /apps/traefik
-  mkdir -p /apps/portainer
-  
-  touch /apps/traefik/traefik.yml
-  echo "api:
-    dashboard: true
-  
-  entryPoints:
-    http:
-      address: \":80\"
-    https:
-      address: \":443\"
-  
-  providers:
-    docker:
-      endpoint: \"unix:///var/run/docker.sock\"
-      exposedByDefault: false
-  
-  certificatesResolvers:
-    http:
-      acme:
-        email: $email
-        storage: acme.json
-        httpChallenge:
-          entryPoint: http
-  
-  providers.file:
-      filename: \"/etc/traefik/dynamic_conf.toml\"
-      watch: true
-  " > /apps/traefik/traefik.yml
-  
-  touch /apps/traefik/config.yml
-  echo "http:
-    middlewares:
-      https-redirect:
-        redirectScheme:
-          scheme: https
-  
-      default-headers:
-        headers:
-          frameDeny: true
-          sslRedirect: true
-          browserXssFilter: true
-          contentTypeNosniff: true
-          forceSTSHeader: true
-          stsIncludeSubdomains: true
-          stsPreload: true
-  
-      secured:
-        chain:
-          middlewares:
-          - default-headers
+
+mkdir -p /apps/traefik
+mkdir -p /apps/portainer
+
+touch /apps/traefik/traefik.yml
+echo "api:
+  dashboard: true
+
+entryPoints:
+  http:
+    address: \":80\"
+  https:
+    address: \":443\"
+
+providers:
+  docker:
+    endpoint: \"unix:///var/run/docker.sock\"
+    exposedByDefault: false
+
+certificatesResolvers:
+  http:
+    acme:
+      email: $email
+      storage: acme.json
+      httpChallenge:
+        entryPoint: http
+
+providers.file:
+    filename: \"/etc/traefik/dynamic_conf.toml\"
+    watch: true
+" > /apps/traefik/traefik.yml
+
+touch /apps/traefik/config.yml
+echo "http:
+  middlewares:
+    https-redirect:
+      redirectScheme:
+        scheme: https
+
+    default-headers:
+      headers:
+        frameDeny: true
+        sslRedirect: true
+        browserXssFilter: true
+        contentTypeNosniff: true
+        forceSTSHeader: true
+        stsIncludeSubdomains: true
+        stsPreload: true
+
+    secured:
+      chain:
+        middlewares:
+        - default-headers
   " > /apps/traefik/config.yml
   
   touch /apps/traefik/acme.json
@@ -233,6 +234,21 @@ function Change-Password {
   tput setaf 7; echo "----------------------------------------------------------------------------------------------------"
 }
 
+# Changement du port SSH
+function Change-SSHPort {
+  cp /etc/ssh/sshd_config /etc/ssh/sshd_config_backup
+
+  for file in /etc/ssh/sshd_config
+  do
+    echo "Traitement de $file ..."
+    sed -i -e "s/#Port 22/Port $ssh_port/" "$file"
+  done  
+  tput setaf 7; echo "----------------------------------------------------------------------------------------------------"
+  tput setaf 7; echo "                                 => Port SSH remplacé par $ssh_port.                                "
+  tput setaf 7; echo "----------------------------------------------------------------------------------------------------"
+
+}
+
 # Changement du motd
 function Change-MOTD {
   ip_du_serveur=$(hostname -i)
@@ -256,9 +272,7 @@ function Change-MOTD {
                Provider : $name_provider
 
   " > /etc/motd
-  tput setaf 7; echo "----------------------------------------------------------------------------------------------------"
-  tput setaf 7; echo "                                      => Le MOTD a été changé.                                      "
-  tput setaf 7; echo "----------------------------------------------------------------------------------------------------"
+  
 }
 #-----------------------------------------------------------------------------------------------------------------------------------
 clear
@@ -272,6 +286,13 @@ if [ $create_user = "y" ]
     tput setaf 6; read -p "===>     Entrez le mot de passe pour Root : " password_root
     tput setaf 6; read -p "===>     Entrez un nom d'utilisateur : " name_user
     tput setaf 6; read -p "===>     Entrez le mot de passe pour l'utilisateur $name_user : " password_user
+fi
+echo ""
+
+tput setaf 6; read -p "Souhaitez vous changer le port SSH ? (recommandé) (y/n)  " change_sshport
+if [ $change_sshport = "y" ]
+  then
+    tput setaf 6; read -p "===>     Entrez port que vous souhaitez (ex : 2020) : " ssh_port
 fi
 echo ""
 
@@ -348,21 +369,40 @@ fi
 echo ""
 echo ""
 if [ $create_user = "y" ]
-then
-    Change-Password
+  then
+  tput setaf 6; echo "Création des utilisateurs et changement des mots de passe.................................. En cours"
+  Change-Password
+  tput setaf 6; echo "Création des utilisateurs et changement des mots de passe.................................. OK"
+fi
+
+echo ""
+echo ""
+if [ $change_sshport = "y" ]
+  then
+  tput setaf 6; echo "Changement du port SSH.................................................................... En cours"
+  Change-SSHPort
+  tput setaf 6; echo "Changement du port SSH.................................................................... OK"
 fi
 
 echo ""
 echo ""
 if [ $change_motd = "y" ] 
-then
-    Change-MOTD
+  then
+  tput setaf 6; echo "Changement du MOTD....................................................................... En cours"
+  Change-MOTD
+  tput setaf 6; echo "Changement du MOTD....................................................................... OK"
 fi
+
 echo ""
 echo ""
-tput bold; tput setaf 7; echo "LISTES DES CONTAINERS EN COURS : "
-tput setaf 3; echo ""
-docker container ls
+if [ $install_traefik = "y" ]
+  then
+  echo ""
+  echo ""
+  tput bold; tput setaf 7; echo "LISTES DES CONTAINERS EN COURS : "
+  tput setaf 3; echo ""
+  docker container ls
+fi
 
 echo ""
 echo ""
@@ -376,7 +416,12 @@ if [ $install_traefik = "y" ]
   tput setaf 7; echo ""
 fi
 tput bold; tput setaf 7; echo "                                Veuillez vous reconnecter                                "
+if [ $change_sshport = "y"]
+  then
+  tput bold; tput setaf 7; echo "                             Votre nouveau port SSH : $ssh_port                        "
+fi
+tput setaf 7; echo ""
 tput bold; tput setaf 6; echo "                                       By PAPAMICA                                       "
-tput bold; tput setaf 6; echo "                                       Labo-Tech.fr                                      "
+tput bold; tput setaf 6; echo "                               Labo-Tech.fr / Tech2Tech.fr                               "
 tput setaf 7; echo "----------------------------------------------------------------------------------------------------"
 tput setaf 2; echo ""
