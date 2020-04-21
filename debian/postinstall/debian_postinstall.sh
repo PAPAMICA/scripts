@@ -313,6 +313,15 @@ if [ $install_docker = "y" ]
     then
     tput setaf 6; read -p "===>     Entrez votre nom de domaine (ex : papamica.fr) : " ndd
     tput setaf 6; read -p "===>     Entrez votre adresse mail pour Let's Encrypt : " email
+    echo ""
+    while [ -z $redirection ] || [ $redirection != 'y' ]
+    do
+      tput setaf 3; echo "ATTENTION ! Veuillez faire les redirections suivantes :"
+      tput setaf 3; echo "=> Traefik : traefik.$ndd => IP WAN de votre serveur !"
+      tput setaf 3; echo "=> Portainer : portainer.$ndd => IP WAN de votre serveur !"
+      echo ""
+      tput setaf 3; echo "Les redirections ont bien été configurées ? (y/n) " redirection
+    done
   fi
 fi
 echo ""
@@ -416,7 +425,7 @@ if [ $install_traefik = "y" ]
   tput setaf 7; echo ""
 fi
 tput bold; tput setaf 7; echo "                                Veuillez vous reconnecter                                "
-if [ $change_sshport = "y"]
+if [ $change_sshport = "y" ]
   then
   tput bold; tput setaf 7; echo "                             Votre nouveau port SSH : $ssh_port                        "
 fi
@@ -428,5 +437,5 @@ tput setaf 2; echo ""
 
 sleep 5
 # Redémarrage du service sshd
-/etc/init.d/sshd restart
+service ssh restart
 
