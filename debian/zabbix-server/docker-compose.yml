@@ -69,4 +69,4 @@ services:
       - GF_PANELS_DISABLE_SANITIZE_HTML=true
       - GF_INSTALL_PLUGINS=grafana-piechart-panel,grafana-worldmap-panel
     ports:
-      - 3001:3000
+      - 3000:3000
