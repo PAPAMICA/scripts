@@ -6,7 +6,7 @@ services:
     container_name: zabbix-db
     environment:   # Username, password and database name variables
       POSTGRES_USER: zabbix
-      POSTGRES_PASSWORD: zabbix
+      POSTGRES_PASSWORD: zabbix-bdd-password
       POSTGRES_DB: zabbix
       PG_DATA: /var/lib/postgresql/data/pgdata #data storage
     volumes:
@@ -18,7 +18,7 @@ services:
     container_name: zabbix
     environment:   # The Postgres database value variable
       POSTGRES_USER: zabbix
-      POSTGRES_PASSWORD: zabbix
+      POSTGRES_PASSWORD: zabbix-bdd-password
       POSTGRES_DB: zabbix
       ZBX_HISTORYSTORAGETYPES: log,text #Zabbix configuration variables
       ZBX_DEBUGLEVEL: 1
@@ -42,7 +42,7 @@ services:
     container_name: zabbix-web
     environment:  # Postgre database variables
       POSTGRES_USER: zabbix
-      POSTGRES_PASSWORD: zabbix
+      POSTGRES_PASSWORD: zabbix-bdd-password
       POSTGRES_DB: zabbix
       ZBX_SERVER_HOST: zabbix-server  # Zabbix related and Php variables
       ZBX_POSTMAXSIZE: 64M
