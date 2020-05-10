@@ -52,7 +52,7 @@ services:
       - postgres-server
       - zabbix-server
     ports:    # Port where Zabbix UI is available
-      - 8090:80
+      - 8090:8080
 
   grafana-xxl:  #optional more functional and creative UI
     image: monitoringartist/grafana-xxl:latest
