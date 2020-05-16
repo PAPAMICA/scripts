@@ -23,7 +23,6 @@ for file in ~/scripts/debian/zabbix-server/docker-compose.yml
 do
   echo "Traitement de $file ..."
   sed -i -e "s/zabbix-bdd-password/$ZABBIX_DB_USER_PASSWORD/g" "$file"
-  sed -i -e "s/ip-adress-zabbix/$SERVER_IP/g" "$file"
 done
 
 docker-compose up -d
