@@ -208,9 +208,9 @@ echo ""
   p="0"  
   p="$(ping -c 1 $dns | tail -1| awk -F '/' '{print $5}')"
   p=${p%.*}
-  if [ "$t" -eq 0 ]; then
+  if [ "$p" -eq 0 ]; then
     tput setaf 1; echo "  SERVEUR DNS :          ERROR"
-  elif [ "$t" -gt 0 ] && [ "$p" -le 100 ]; then
+  elif [ "$p" -gt 0 ] && [ "$p" -le 100 ]; then
     tput setaf 2; echo "  SERVEUR DNS :          OK => $p ms"
   else
     tput setaf 3; echo "  SERVEUR DNS :          BAD => $p ms"
