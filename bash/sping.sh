@@ -1,16 +1,20 @@
-#!/bin/zsh
-if [ -z $1 ]; then
-    1="8.8.8.8"
+#!/bin/bash
+ip=8.8.8.8
+temps=1
+
+if [ "$1" != "" ]; then
+    ip=$1
 fi
 
-if [ -z $2 ]; then
-    2="1"
+if [ "$2" != "" ]; then
+    temps=$2
 fi
 
-while sleep $2; do
+
+while sleep $temps; do
   t="0"  
-  t="$(ping -c 1 $1 | tail -1| awk -F '/' '{print $5}')"
-  t=$(printf "%.0f" $t)
+  t="$(ping -c 1 $ip | tail -1| awk -F '/' '{print $5}')"
+  t=${t%.*}
   if [ "$t" -eq 0 ]; then
     tput setaf 1; echo "ERROR"
   elif [ "$t" -gt 0 ] && [ "$t" -le 100 ]; then
