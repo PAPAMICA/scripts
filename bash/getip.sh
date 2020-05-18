@@ -17,11 +17,12 @@ ipadress=$(ip route get 8.8.8.8 | awk -F"src " 'NR==1{split($2,a," ");print a[1]
 gateway=$(/sbin/ip route | awk '/default/ { print $3 }')
 interface=$(ip route get 8.8.8.8 | awk -F"dev " 'NR==1{split($2,a," ");print a[1]}')
 mask=$(ifconfig "$interface" | awk '/netmask/{ print $4;}')
-dns=$(nmcli dev show | grep DNS | sed 's/\s\s*/\t/g' | cut -f 2)
+dns=$(nmcli dev show | grep DNS | awk '{if(NR==1) print $2}')
+dns2=$(nmcli dev show | grep DNS | awk '{if(NR==2) print $2}')
 domain=$(nmcli dev show | grep DOMAIN | sed 's/\s\s*/\t/g' | cut -f 2)
 mac=$(cat /sys/class/net/$interface/address)
 ssid=$(iwgetid -r)
-wan=$(curl -s http://whatismijnip.nl |cut -d " " -f 5)
+wan=$(curl -s http://whatismijnip.nl |cut -d " " -f 5) 
 mtu=$(cat /sys/class/net/$interface/mtu)
 rxerror=$(cat /sys/class/net/$interface/statistics/rx_errors)
 txerror=$(cat /sys/class/net/$interface/statistics/tx_errors)
@@ -38,6 +39,9 @@ echo "Passerelle :           $gateway"
 echo "Masque :               $mask"
 echo ""
 echo "Serveur DNS :          $dns"
+if [ -n $dns2 ]; then
+echo "Serveur DNS 2 :        $dns2"
+fi
 echo "interface :            $interface"
 echo "SSID :                 $ssid"
 echo "Adresse MAC :          $mac"
