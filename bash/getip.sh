@@ -154,9 +154,8 @@ fi
 
 
 # Récuparation des informations 
-ipadress=$(ifconfig "$interface" | awk '/inet /{ print $2;}')
+ipadress=$(ip a show "$interface" | awk '/inet /{ print $2;}')
 gateway=$(nmcli dev show $interface |grep IP4.GATEWAY | awk '{print $2 }')
-mask=$(ifconfig "$interface" | awk '/netmask/{ print $4;}')
 dns=$(nmcli dev show $interface | grep DNS | awk '{if(NR==1) print $2}')
 dns2=$(nmcli dev show $interface |grep DNS | awk '{if(NR==2) print $2}')
 domain=$(nmcli dev show $interface | grep DOMAIN | sed 's/\s\s*/\t/g' | cut -f 2)
@@ -176,7 +175,6 @@ tput setaf 7; echo "________________________________________________"
 echo ""
 echo "  LAN IP Address :       $ipadress"
 echo "  Gateway :              $gateway"
-echo "  Mask :                 $mask"
 echo ""
 echo "  DNS Server :           $dns"
 if [ -n $dns2 ]; then
@@ -286,12 +284,12 @@ fi
 
 if [[ $1 =~ "s" ]]; then
     echo ""
-    speedtest > temp.txt
+    speedtest > .temp.txt
     ping=$(grep "Hosted" "temp.txt" | awk '{print $(NF-1)}')
     upload=$(grep "Upload" "temp.txt" | awk '{print $2}')
     download=$(grep "Download" "temp.txt" | awk '{print $2}')
     fai=$(grep "Testing from" "temp.txt" | awk '{print $3}')
-    rm temp.txt
+    rm .temp.txt
 
     echo "  FAI :                  $fai"
 
