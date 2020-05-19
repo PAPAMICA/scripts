@@ -14,10 +14,10 @@
 
 if [[ $1 =~ "h" ]]; then
   echo ""
-  tput setaf 7; echo "______________________________________________________________"
+  tput setaf 7; echo "________________________________________________________________________________"
   echo ""
-  echo "    Bash script to improve the reading of network information"
-  echo "           create by Mickael Asseline (PAPAMICA)"
+  echo "             Bash script to improve the reading of network informations         "
+  echo "                       create by Mickael Asseline (PAPAMICA)                    "
   echo ""
   echo "  Options availables :"
   echo "     -s      Launch a speedtest (require speedtest-cli)"
