@@ -1,19 +1,49 @@
 #!/bin/bash
 
-# Getip by PAPAMICA
-# Un simple script pour améliorer l'affichage de certaines informations essentielles.
+# Getip by Mickael Asseline (PAPAMICA)
 
-# Utilisation : 
-# Rendez executable le script avec "chmod +x getip.sh"
-# Executez le avec "./getip.sh"
+# A simple script to improve the display of certain essential information.
 
-# Le paramètre "-s" permet de lancer un speedtest. (Nécessite speedtest-cli)
+# Use : 
+# Make the script executable with "chmod +x getip.sh"
+# Execute it with "./getip.sh"
 
-# Vous pouvez ajouter un alias pour le lancer avec une simple commande.
+# The "-s" parameter is used to launch a speedtest. (Require speedtest-cli)
+
+# You can add an alias to launch it with a simple command.
+
+if [[ $1 =~ "h" ]]; then
+  echo ""
+  tput setaf 7; echo "______________________________________________________________"
+  echo ""
+  echo "    Bash script to improve the reading of network information"
+  echo "           create by Mickael Asseline (PAPAMICA)"
+  echo ""
+  echo "  Options availables :"
+  echo "     -s      Launch a speedtest (require speedtest-cli)"
+  echo "     -i      Allows the choice of the interface to display"
+  echo "     -r      Change the default route by the chosen interface"
+  echo "              (For speedtest and pings tests)"
+  echo "     -h      Diplay this help"
+  echo ""
+  echo "  Use :"
+  echo "     getip       IP informations"
+  echo "     getip -s    IP informations + Speedtest"
+  echo "     getip -i    IP informations + Choice interface"
+  echo "     getip -ir   IP informations + Choice interface + Change route"
+  echo "     getip -sir  IP informations + Choice interface + Change route + Speedtest"
+  echo 
+  exit
+fi
+
+
+network=$(nmcli con show --active)
+if [ "$network" = "" ]; then
+  tput setaf 1; echo "Pas d'interfaces actives !"
+  exit
+fi
 
 interface=$(ip route get 8.8.8.8 | awk -F"dev " 'NR==1{split($2,a," ");print a[1]}')
-
-
 
 if [[ $1 =~ "i" ]]; then
   int1=$(nmcli con show --active | awk '{if(NR==2) print $(NF-1)}')
@@ -76,10 +106,10 @@ if [[ $1 =~ "i" ]]; then
     ((io++)) 
   fi
   echo ""
-  read -p "Choisissez l'interface (1-$io) : " intchoix
+  read -p "  Choice interface (1-$io) : " intchoix
 
   if [ "$intchoix" -lt 1 ] && [ "$intchoix" -gt $io ]; then
-    echo "Merci de saisir un bon numero !"
+    echo "  Error : choice interface !"
     exit
   fi
   if [ "$intchoix" = 1 ]; then
@@ -115,10 +145,10 @@ fi
 if [[ $1 =~ "r" ]]; then
   gateway=$(nmcli dev show $interface |grep IP4.GATEWAY | awk '{print $2 }')
   echo ""
-  tput setaf 3; echo "  Le changement de route par defaut nécessite les droits root."
+  tput setaf 3; echo "  Requires root rights."
   sudo route del default
   sudo route add default gw $gateway $interface
-  tput setaf 2; echo "  Route par defaut modifiée pour passer par $interface"
+  tput setaf 2; echo "  The default route has been changed to pass to $interface"
 fi
 
 
@@ -132,10 +162,6 @@ dns2=$(nmcli dev show $interface |grep DNS | awk '{if(NR==2) print $2}')
 domain=$(nmcli dev show $interface | grep DOMAIN | sed 's/\s\s*/\t/g' | cut -f 2)
 mac=$(cat /sys/class/net/$interface/address)
 nom=$(nmcli dev show $interface |grep GENERAL.CONNECTION | awk '{print $2 " "  $3 " " $4 " " $5 " " $6}')
-ping="$(ping -c 1 google.fr | tail -1| awk -F '/' '{print $5}')"
-if [ "$t" != 0 ]; then
-wan=$(curl -s ifconfig.io)
-fi
 mtu=$(cat /sys/class/net/$interface/mtu)
 rxerror=$(cat /sys/class/net/$interface/statistics/rx_errors)
 txerror=$(cat /sys/class/net/$interface/statistics/tx_errors)
@@ -148,20 +174,26 @@ txdropped=$(cat /sys/class/net/$interface/statistics/tx_dropped)
 # Affichage des informations
 tput setaf 7; echo "________________________________________________"
 echo ""
-echo "  Adresse IP LAN :       $ipadress"
-echo "  Passerelle :           $gateway"
-echo "  Masque :               $mask"
+echo "  LAN IP Address :       $ipadress"
+echo "  Gateway :              $gateway"
+echo "  Mask :                 $mask"
 echo ""
-echo "  Serveur DNS :          $dns"
+echo "  DNS Server :           $dns"
 if [ -n $dns2 ]; then
-echo "  Serveur DNS 2 :        $dns2"
+echo "  DNS Server 2 :         $dns2"
 fi
-echo "  interface :            $interface"
-echo "  Nom :                  $nom"
-echo "  Adresse MAC :          $mac"
+echo "  Interface :            $interface"
+echo "  Name :                 $nom"
+echo "  MAC Address :          $mac"
 echo "  MTU :                  $mtu"
-echo "  Domaine :              $domain"
-echo "  Adresse IP WAN :       $wan"
+echo "  Domain :               $domain"
+
+ping="$(ping -c 1 google.fr | tail -1| awk -F '/' '{print $5}')"
+if [ "$ping" != 0 ]; then
+wan=$(curl -s ifconfig.io)
+fi
+
+echo "  WAN IP Address :       $wan"
 tput setaf 7; echo "________________________________________________"
 echo ""
 echo "  RX :                   $rxerror errors / $rxdropped dropped"
@@ -171,50 +203,80 @@ echo ""
 # Vérification de la connexion à Internet via IP
   t="0"  
   t="$(ping -c 1 8.8.8.8 | tail -1| awk -F '/' '{print $5}')"
-  t=${t%.*}
-  if [ "$t" -eq 0 ]; then
+  if [ -z "$t" ]; then
     tput setaf 1; echo "  INTERNET IP :          ERROR"
-  elif [ $t -gt 0 ] && [ $t -le 100 ]; then
-    tput setaf 2; echo "  INTERNET IP :          OK => $t ms"
-  else
-    tput setaf 3; echo "  INTERNET IP :          BAD => $t ms"
   fi
+
+  if [ -n "$t" ]; then
+  t=${t%.*}
+  ((t++))
+    if [ "$t" -eq 1 ]; then
+    tput setaf 2; echo "  INTERNET IP :          OK => <$t ms"
+    elif [ "$t" -gt 1 ] && [ "$t" -le 100 ]; then
+    tput setaf 2; echo "  INTERNET IP :          OK => $t ms"
+    else
+    tput setaf 3; echo "  INTERNET IP :          BAD => $t ms"
+    fi
+  fi
+
 
 # Vérification de la connexion à Internet via DNS
   t="0"  
   t="$(ping -c 1 google.fr | tail -1| awk -F '/' '{print $5}')"
-  t=${t%.*}
-  if [ "$t" -eq 0 ]; then
+  if [ -z "$t" ]; then
     tput setaf 1; echo "  INTERNET DNS :         ERROR"
-  elif [ "$t" -gt 0 ] && [ "$t" -le 100 ]; then
+  fi
+
+  if [ -n "$t" ]; then
+  t=${t%.*}
+  ((t++))
+    if [ "$t" -eq 1 ]; then
+    tput setaf 2; echo "  INTERNET DNS :         OK => <$t ms"
+    elif [ "$t" -gt 1 ] && [ "$t" -le 100 ]; then
     tput setaf 2; echo "  INTERNET DNS :         OK => $t ms"
-  else
+    else
     tput setaf 3; echo "  INTERNET DNS :         BAD => $t ms"
+    fi
   fi
 
 # Vérification de la connexion à la passerelle
-  p="0"  
-  p="$(ping -c 1 $gateway | tail -1| awk -F '/' '{print $5}')"
-  p=${p%.*}
-  if [ "$p" -eq 0 ]; then
-    tput setaf 1; echo "  PASSERELLE :           ERROR"
-  elif [ "$p" -gt 0 ] && [ "$p" -le 100 ]; then
-    tput setaf 2; echo "  PASSERELLE :           OK => $p ms"
-  else
-    tput setaf 3; echo "  PASSERELLE :           BAD => $p ms"
+  t="0"  
+  t="$(ping -c 1 $gateway | tail -1| awk -F '/' '{print $5}')"
+  if [ -z "$t" ]; then
+    tput setaf 1; echo "  GATEWAY :              ERROR"
+  fi
+
+  if [ -n "$t" ]; then
+  t=${t%.*}
+  ((t++))
+    if [ "$t" -eq 1 ]; then
+    tput setaf 2; echo "  GATEWAY :              OK => <$t ms"
+    elif [ "$t" -gt 1 ] && [ "$t" -le 100 ]; then
+    tput setaf 2; echo "  GATEWAY :              OK => $t ms"
+    else
+    tput setaf 3; echo "  GATEWAY :              BAD => $t ms"
+    fi
   fi
 
 # Vérification de la connexion au serveur DNS
-  p="0"  
-  p="$(ping -c 1 $dns | tail -1| awk -F '/' '{print $5}')"
-  p=${p%.*}
-  if [ "$p" -eq 0 ]; then
-    tput setaf 1; echo "  SERVEUR DNS :          ERROR"
-  elif [ "$p" -gt 0 ] && [ "$p" -le 100 ]; then
-    tput setaf 2; echo "  SERVEUR DNS :          OK => $p ms"
-  else
-    tput setaf 3; echo "  SERVEUR DNS :          BAD => $p ms"
+  t="0"  
+  t="$(ping -c 1 $dns | tail -1| awk -F '/' '{print $5}')"
+  if [ -z "$t" ]; then
+    tput setaf 1; echo "  DNS SERVER :           ERROR"
   fi
+
+  if [ -n "$t" ]; then
+  t=${t%.*}
+  ((t++))
+    if [ "$t" -eq 1 ]; then
+    tput setaf 2; echo "  DNS SERVER :           OK => <$t ms"
+    elif [ "$t" -gt 1 ] && [ "$t" -le 100 ]; then
+    tput setaf 2; echo "  DNS SERVER :           OK => $t ms"
+    else
+    tput setaf 3; echo "  DNS SERVER :           BAD => $t ms"
+    fi
+  fi
+
 tput setaf 7; echo "________________________________________________"
 
 # Si -s est présent, lancement du Speedtest
@@ -234,12 +296,12 @@ if [[ $1 =~ "s" ]]; then
     echo "  FAI :                  $fai"
 
     ping=${ping%.*}
-    if [ "$t" -eq 0 ]; then
-      tput setaf 1; echo "  PING MOYEN :           ERROR"
-    elif [ "$t" -gt 0 ] && [ "$p" -le 100 ]; then
-      tput setaf 2; echo "  PING MOYEN :           OK => $ping ms"
+    if [ "$ping" -eq 0 ]; then
+      tput setaf 1; echo "  PING :                 ERROR"
+    elif [ "$ping" -gt 0 ] && [ "$ping" -le 100 ]; then
+      tput setaf 2; echo "  PING :                 OK => $ping ms"
     else
-      tput setaf 3; echo "  PING MOYEN :           BAD => $ping ms"
+      tput setaf 3; echo "  PING :                 BAD => $ping ms"
     fi
 
     download=${download%.*}
@@ -264,4 +326,14 @@ if [[ $1 =~ "s" ]]; then
       tput setaf 2; echo "  UPLOAD :               GOOD => $upload Mbit/s"
     fi
     tput setaf 7; echo "________________________________________________"
+fi
+
+if [[ $1 =~ "r" ]]; then
+  echo ""
+  tput setaf 3; read -p "  Reset the default route? (y/n) : " dellroute
+  if [[ "$dellroute" = "y" ]]; then
+    sudo route del default
+    sudo systemctl restart NetworkManager
+  fi
+  tput setaf 2; echo "  Default route reset."
 fi
