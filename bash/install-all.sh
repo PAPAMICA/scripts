@@ -9,7 +9,7 @@ echo ""
 tput setaf 2; echo "Installation of dependencies"
 tput setaf 7; echo ""
 
-packagesNeeded='speedtest-cli'
+packagesNeeded='speedtest-cli network-manager'
 if [ -x "$(command -v apk)" ]; then 
         sudo apk add -y --no-cache $packagesNeeded
         tput setaf 2; echo "$packagesNeeded installed."
