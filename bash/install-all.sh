@@ -6,28 +6,30 @@
 # Compatible avec Bash et Zsh
 
 echo ""
-echo "Installation of dependencies"
+tput setaf 2; echo "Installation of dependencies"
+tput setaf 7; echo ""
 
 packagesNeeded='speedtest-cli'
 if [ -x "$(command -v apk)" ]; then 
         sudo apk add -y --no-cache $packagesNeeded
-        echo "$packagesNeeded installed."
+        tput setaf 2; echo "$packagesNeeded installed."
     elif [ -x "$(command -v apt-get)" ]; then 
         sudo apt-get install -y $packagesNeeded
-        echo "$packagesNeeded installed."
+        tput setaf 2; echo "$packagesNeeded installed."
     elif [ -x "$(command -v dnf)" ];     then 
         sudo dnf install -y $packagesNeeded
-        echo "$packagesNeeded installed."
+        tput setaf 2; echo "$packagesNeeded installed."
     elif [ -x "$(command -v zypper)" ];  then 
         sudo zypper install -y $packagesNeeded
-        echo "$packagesNeeded installed."
+        tput setaf 2; echo "$packagesNeeded installed."
     elif [ -x "$(command -v pacman)" ];  then 
         sudo pacman -S --noconfirm $packagesNeeded
-        echo "$packagesNeeded installed."
+        tput setaf 2; echo "$packagesNeeded installed."
     else 
-        echo "FAILED TO INSTALL PACKAGE: Package manager not found. You must manually install: $packagesNeeded">&2; 
+        tput setaf 1; echo "FAILED TO INSTALL PACKAGE: Package manager not found. You must manually install: $packagesNeeded">&2; 
 fi
 
+tput setaf 7; echo ""
 # Copie des scripts dans le dossier utilisateur
 cp getip.sh ~/.getip.sh
 chmod +x ~/.getip.sh
@@ -37,10 +39,10 @@ chmod +x ~/.sping.sh
 
 
 echo ""
-echo "Current User : $USER"
-echo "Current Shell : $SHELL"
-
-if [[ $SHELL =~ "zsh"]]; then
+tput setaf 2; echo "Current User : $USER"
+tput setaf 2; echo "Current Shell : $SHELL"
+tput setaf 7; echo ""
+if [[ $SHELL =~ "zsh" ]]; then
     echo "alias getip=\"~/.getip.sh\"" >> ~/.zshrc
     echo "alias getip=\"~/.sping.sh\"" >> ~/.zshrc
     else
@@ -48,8 +50,8 @@ if [[ $SHELL =~ "zsh"]]; then
     echo "alias getip=\"~/.sping.sh\"" >> ~/.bashrc
 fi
 
-echo ""
-echo "Installation complete"
-echo "You can use this commands : "
-echo "     - getip"
-echo "     - sping"
+tput setaf 2; echo ""
+tput setaf 2; echo "Installation complete"
+tput setaf 2; echo "You can use this commands : "
+tput setaf 2; echo "     - getip"
+tput setaf 2; echo "     - sping"
