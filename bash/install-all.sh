@@ -44,14 +44,15 @@ tput setaf 2; echo "Current Shell : $SHELL"
 tput setaf 7; echo ""
 if [[ $SHELL =~ "zsh" ]]; then
     echo "alias getip=\"~/.getip.sh\"" >> ~/.zshrc
-    echo "alias getip=\"~/.sping.sh\"" >> ~/.zshrc
+    echo "alias sping=\"~/.sping.sh\"" >> ~/.zshrc
     else
     echo "alias getip=\"~/.getip.sh\"" >> ~/.bashrc
-    echo "alias getip=\"~/.sping.sh\"" >> ~/.bashrc
+    echo "alias sping=\"~/.sping.sh\"" >> ~/.bashrc
 fi
 
 tput setaf 2; echo ""
 tput setaf 2; echo "Installation complete"
-tput setaf 2; echo "You can use this commands : "
+tput setaf 2; echo "Installation complete"
+tput setaf 2; echo "After reconnect, you can use this commands : "
 tput setaf 2; echo "     - getip"
 tput setaf 2; echo "     - sping"
