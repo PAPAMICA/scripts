@@ -30,7 +30,11 @@ fi
 
 # Copie des scripts dans le dossier utilisateur
 cp getip.sh ~/.getip.sh
+chmod +x ~/.getip.sh
+
 cp sping.sh ~/.sping.sh
+chmod +x ~/.sping.sh
+
 
 echo ""
 echo "Current User : $USER"
