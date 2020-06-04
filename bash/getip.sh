@@ -39,11 +39,12 @@ fi
 
 network=$(nmcli con show --active)
 if [ "$network" = "" ]; then
-  tput setaf 1; echo "Pas d'interfaces actives !"
+  tput setaf 1; echo "No active interface !"
   exit
 fi
 
 interface=$(ip route get 8.8.8.8 | awk -F"dev " 'NR==1{split($2,a," ");print a[1]}')
+if [ $interface != "unreachable" ]; then
 
 if [[ $1 =~ "i" ]]; then
   int1=$(nmcli con show --active | awk '{if(NR==2) print $(NF-1)}')
@@ -154,8 +155,9 @@ fi
 
 
 # Récuparation des informations 
-ipadress=$(ip a show "$interface" | awk '/inet /{ print $2;}')
+ipadress=$(ifconfig "$interface" | awk '/inet /{ print $2;}')
 gateway=$(nmcli dev show $interface |grep IP4.GATEWAY | awk '{print $2 }')
+mask=$(ifconfig "$interface" | awk '/netmask/{ print $4;}')
 dns=$(nmcli dev show $interface | grep DNS | awk '{if(NR==1) print $2}')
 dns2=$(nmcli dev show $interface |grep DNS | awk '{if(NR==2) print $2}')
 domain=$(nmcli dev show $interface | grep DOMAIN | sed 's/\s\s*/\t/g' | cut -f 2)
@@ -175,6 +177,7 @@ tput setaf 7; echo "________________________________________________"
 echo ""
 echo "  LAN IP Address :       $ipadress"
 echo "  Gateway :              $gateway"
+echo "  Mask :                 $mask"
 echo ""
 echo "  DNS Server :           $dns"
 if [ -n $dns2 ]; then
@@ -186,7 +189,7 @@ echo "  MAC Address :          $mac"
 echo "  MTU :                  $mtu"
 echo "  Domain :               $domain"
 
-ping="$(ping -c 1 google.fr | tail -1| awk -F '/' '{print $5}')"
+ping="$(ping -c 1 -W 1 google.fr | tail -1| awk -F '/' '{print $5}')"
 if [ "$ping" != 0 ]; then
 wan=$(curl -s ifconfig.io)
 fi
@@ -200,7 +203,7 @@ echo ""
 
 # Vérification de la connexion à Internet via IP
   t="0"  
-  t="$(ping -c 1 8.8.8.8 | tail -1| awk -F '/' '{print $5}')"
+  t="$(ping -c 1 -W 1 8.8.8.8 | tail -1| awk -F '/' '{print $5}')"
   if [ -z "$t" ]; then
     tput setaf 1; echo "  INTERNET IP :          ERROR"
   fi
@@ -220,7 +223,7 @@ echo ""
 
 # Vérification de la connexion à Internet via DNS
   t="0"  
-  t="$(ping -c 1 google.fr | tail -1| awk -F '/' '{print $5}')"
+  t="$(ping -c 1 -W 1 google.fr | tail -1| awk -F '/' '{print $5}')"
   if [ -z "$t" ]; then
     tput setaf 1; echo "  INTERNET DNS :         ERROR"
   fi
@@ -239,7 +242,7 @@ echo ""
 
 # Vérification de la connexion à la passerelle
   t="0"  
-  t="$(ping -c 1 $gateway | tail -1| awk -F '/' '{print $5}')"
+  t="$(ping -c 1 -W 1 $gateway | tail -1| awk -F '/' '{print $5}')"
   if [ -z "$t" ]; then
     tput setaf 1; echo "  GATEWAY :              ERROR"
   fi
@@ -258,7 +261,7 @@ echo ""
 
 # Vérification de la connexion au serveur DNS
   t="0"  
-  t="$(ping -c 1 $dns | tail -1| awk -F '/' '{print $5}')"
+  t="$(ping -c 1 -W 1 $dns | tail -1| awk -F '/' '{print $5}')"
   if [ -z "$t" ]; then
     tput setaf 1; echo "  DNS SERVER :           ERROR"
   fi
@@ -284,12 +287,12 @@ fi
 
 if [[ $1 =~ "s" ]]; then
     echo ""
-    speedtest > .temp.txt
+    speedtest > temp.txt
     ping=$(grep "Hosted" "temp.txt" | awk '{print $(NF-1)}')
     upload=$(grep "Upload" "temp.txt" | awk '{print $2}')
     download=$(grep "Download" "temp.txt" | awk '{print $2}')
     fai=$(grep "Testing from" "temp.txt" | awk '{print $3}')
-    rm .temp.txt
+    rm temp.txt
 
     echo "  FAI :                  $fai"
 
@@ -334,4 +337,8 @@ if [[ $1 =~ "r" ]]; then
     sudo systemctl restart NetworkManager
   fi
   tput setaf 2; echo "  Default route reset."
+fi
+else
+  tput setaf 1; echo "  NO IP"
+  exit
 fi

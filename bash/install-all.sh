@@ -28,6 +28,7 @@ if [ -x "$(command -v apk)" ]; then
     else 
         tput setaf 1; echo "FAILED TO INSTALL PACKAGE: Package manager not found. You must manually install: $packagesNeeded">&2; 
 fi
+$DESKTOP_SESSION
 
 tput setaf 7; echo ""
 # Copie des scripts dans le dossier utilisateur
@@ -41,6 +42,7 @@ chmod +x ~/.sping.sh
 echo ""
 tput setaf 2; echo "Current User : $USER"
 tput setaf 2; echo "Current Shell : $SHELL"
+tput setaf 2; echo "Current Desktop Session : $DESKTOP_SESSION"
 tput setaf 7; echo ""
 if [[ $SHELL =~ "zsh" ]]; then
     echo "alias getip=\"~/.getip.sh\"" >> ~/.zshrc
