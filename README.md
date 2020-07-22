@@ -3,6 +3,8 @@
 |  ![PAPAMICA](https://zupimages.net/up/20/04/7vtd.png) |  [Labo-Tech.fr](https://labo-tech.fr/)<br/> [Tech2Tech.fr](https://www.tech2tech.fr/) <br/> [Twitter @PAPAMICA__](https://twitter.com/PAPAMICA__) <br/> [LinkedIn](https://www.linkedin.com/in/mickael-asseline/)<br/> |
 |:--------:| :-------------|
 
+## ATTENTION : Les scripts sont prévu pour l'utilisateur root ! Veuillez utiliser l'utilisateur root pour toutes les manipulations (et télécharger ce git dans le dossier /root/ de votre serveur)
+
 ### Fonctionnalités
 
 - Déployez plusieurs solutions en 4 commandes : Zabbix Serveur, Zabbix Agent, Zabbix Proxy, iTop, Guacamole, et bien plus !
