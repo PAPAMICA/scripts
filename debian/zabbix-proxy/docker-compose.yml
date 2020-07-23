@@ -1,7 +1,7 @@
 version: '2'
 services:
   zabbix-proxy:    # The Postgres Database Service
-    image: zabbix/zabbix-proxy-sqlite3:ubuntu-4.4-latest
+    image: zabbix/zabbix-proxy-sqlite3:ubuntu-5.0-latest
     restart: always
     container_name: proxy-zabbix
     environment:   # Username, password and database name variables
