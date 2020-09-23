@@ -1,6 +1,7 @@
 #!/bin/bash
 
-urlserver=   # http://grafana.ndd:3100/loki/api/v1/push
+# http://grafana.ndd:3100/loki/api/v1/push
+urlserver=   
 host=$(hostname)
 
 cd /bin
