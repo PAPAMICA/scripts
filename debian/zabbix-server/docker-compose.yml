@@ -58,9 +58,9 @@ services:
     image: monitoringartist/grafana-xxl:latest
     restart: always
     container_name: grafana
-    volumes: 
-      - /apps/grafana/config:/etc/grafana
-      - /apps/grafana/data:/var/lib/grafana
+#    volumes: 
+#      - /apps/grafana/config:/etc/grafana
+#      - /apps/grafana/data:/var/lib/grafana
     environment:
 #      - GF_PATHS_DATA=/config/data
 #      - GF_PATHS_LOGS=/config/logs
