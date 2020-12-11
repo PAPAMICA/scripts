@@ -52,6 +52,7 @@ function Install-PaquetsEssentiels {
   apt install -y curl
   apt install -y fonts-powerline
   apt install -y fail2ban
+  apt install -y mosh
 }
 
 # Installation des dépendances et de docker
