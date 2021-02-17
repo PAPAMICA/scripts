@@ -186,7 +186,7 @@ services:
 
 
   portainer:
-    image: portainer/portainer:latest
+    image: portainer/portainer-ce:latest
     container_name: portainer
     restart: unless-stopped
     security_opt:
