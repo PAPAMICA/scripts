@@ -25,7 +25,7 @@ tput setaf 7; echo "              Lien : $SERVER_IP:8080              "
 tput setaf 7; echo "    Identifiant : guacadmin | MDP : guacadmin     "
 tput setaf 7; echo ""
 tput bold; tput setaf 6; echo "                   By PAPAMICA                   "
-tput bold; tput setaf 6; echo "                   Labo-Tech.fr                   "
+tput bold; tput setaf 6; echo "                   wiki-tech.io                   "
 tput setaf 7; echo "--------------------------------------------------"
 tput setaf 2; echo ""
 
