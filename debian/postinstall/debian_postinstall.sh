@@ -436,7 +436,7 @@ if [ $change_sshport = "y" ]
 fi
 tput setaf 7; echo ""
 tput bold; tput setaf 6; echo "                                       By PAPAMICA                                       "
-tput bold; tput setaf 6; echo "                               Labo-Tech.fr / Tech2Tech.fr                               "
+tput bold; tput setaf 6; echo "                               wiki-tech.io / Tech2Tech.fr                               "
 tput setaf 7; echo "----------------------------------------------------------------------------------------------------"
 tput setaf 2; echo ""
 
